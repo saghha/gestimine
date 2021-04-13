@@ -1,0 +1,75 @@
+version: '3'
+services:
+  #PHP Service
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: gestimine/php
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6001:6001"
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    working_dir: /var/www/backend
+    volumes:
+      - ./:/var/www
+      - ./backend/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./backend/supervisor.d:/etc/supervisor/conf.d
+    networks:
+      - gesti-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver_gestimine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./backend/nginx/conf.d/app.conf:/etc/nginx/nginx.conf
+    networks:
+      - gesti-network
+
+  #MySQL Service
+  db:
+    image: mysql:5.7.22
+    container_name: dbsgesti
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: gestimine
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./backend/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - gesti-network
+
+  #Redis Service
+  redis:
+    image: redis:alpine
+    networks:
+      - gesti-network
+
+#Docker Network
+networks:
+    gesti-network:
+        driver: bridge
+
+#Volumnes
+volumes:
+  dbdata:
+    driver: local
