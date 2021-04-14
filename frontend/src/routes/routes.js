@@ -16,6 +16,7 @@ import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
 // custom Page
 import Test from 'src/pages/Test'
+import DatosMina from 'src/pages/DatosMina/DatosMina'
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
         path: 'test',
         name: 'Test',
         component: Test
+      },
+      {
+        path: 'datos_mina',
+        name: 'DatosMina',
+        component: DatosMina
       },
       {
         path: 'overview',

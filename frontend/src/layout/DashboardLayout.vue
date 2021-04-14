@@ -6,29 +6,37 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Dashboard</p>
       </sidebar-link>
+      <sidebar-link to="/admin/datos_mina">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Datos de Mina</p>
+      </sidebar-link>
       <sidebar-link to="/admin/user">
         <i class="nc-icon nc-circle-09"></i>
-        <p>User Profile</p>
+        <p>Cronograma</p>
       </sidebar-link>
       <sidebar-link to="/admin/table-list">
         <i class="nc-icon nc-notes"></i>
-        <p>Table list</p>
+        <p>Plan Minero</p>
       </sidebar-link>
       <sidebar-link to="/admin/typography">
         <i class="nc-icon nc-paper-2"></i>
-        <p>Typography</p>
+        <p>Perforación</p>
       </sidebar-link>
       <sidebar-link to="/admin/icons">
         <i class="nc-icon nc-atom"></i>
-        <p>Icons</p>
+        <p>Tronadura</p>
       </sidebar-link>
       <sidebar-link to="/admin/maps">
         <i class="nc-icon nc-pin-3"></i>
-        <p>Maps</p>
+        <p>Cargio</p>
       </sidebar-link>
       <sidebar-link to="/admin/notifications">
         <i class="nc-icon nc-bell-55"></i>
-        <p>Notifications</p>
+        <p>Transporte</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/notifications">
+        <i class="nc-icon nc-bell-55"></i>
+        <p>Alertas</p>
       </sidebar-link>
 
       <template slot="bottom-links">

@@ -6,10 +6,7 @@
     <div class="sidebar-wrapper">
       <div class="logo">
         <a href="#" class="simple-text logo__container">
-            <div class="logo-img">
-                <img src="img/vue-logo.png" alt="">
-            </div>
-          {{title}}
+          <img src="img/logo.png" alt="" style="max-width: 10vw;">
         </a>
       </div>
 
