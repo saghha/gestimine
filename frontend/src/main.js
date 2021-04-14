@@ -29,7 +29,15 @@ import routes from './routes/routes'
 import store from './store/index'
 import { rutInputDirective } from 'vue-dni';
 import './registerServiceWorker'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 // plugin setup
+// Make BootstrapVue available throughout your project
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
 Vue.directive('rut', rutInputDirective);
