@@ -47,7 +47,8 @@ extend('rut', rutValidator)
 Object.keys(rules).forEach(rule => {
   extend(rule, rules[rule]);
 });
-axios.defaults.baseURL = 'http://localhost/api'
+axios.defaults.baseURL = 'http://localhost/public/api'
+//axios.defaults.baseURL = 'http://localhost/api'
 console.log(axios.defaults.baseURL)
 // configure router
 const router = new VueRouter({

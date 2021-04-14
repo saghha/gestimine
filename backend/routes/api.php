@@ -21,3 +21,6 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::post('login', 'AuthController@login');
     Route::get('profile', 'AuthController@me');
 });
+Route::group(['prefix' => 'datos-mina', 'namespace' => 'DatosMina'], function(){
+    Route::apiResource('informacion', 'DatosMinaController');
+});
