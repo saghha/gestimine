@@ -14,6 +14,8 @@ import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
+// custom Page
+import Test from 'src/pages/Test'
 
 const routes = [
   {
@@ -38,6 +40,11 @@ const routes = [
     component: DashboardLayout,
     redirect: '/admin/overview',
     children: [
+      {
+        path: 'test',
+        name: 'Test',
+        component: Test
+      },
       {
         path: 'overview',
         name: 'Overview',
