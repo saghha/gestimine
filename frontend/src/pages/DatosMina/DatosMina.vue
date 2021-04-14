@@ -93,14 +93,21 @@ export default {
       datos_perforacion: [],
       datos_tronadura: [],
       datos_operativos: [],
-      datos_tronadura_produccion: []
+      datos_tronadura_produccion: [],
+      showEditModal: false,
+      showNewModal: false,
     }
   },
   created () {
 
   },
   methods: {
-
+    handleEditModal: function (cond) {
+      this.showEditModal = cond
+    },
+    handleNewModal: function (cond) {
+      this.showNewModal = cond
+    }
   }
 }
 </script>

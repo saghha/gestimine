@@ -13,6 +13,17 @@ export default {
       type: Object,
       default: {}
     }
+  },
+  data () {
+    return {
+      datos : {}
+    }
+  },
+  created () {
+    this.datos = JSON.parse(JSON.stringify(this.info))
+  },
+  methods: {
+    
   }
 }
 </script>
