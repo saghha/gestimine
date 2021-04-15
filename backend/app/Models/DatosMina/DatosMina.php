@@ -64,7 +64,7 @@ class DatosMina extends Model
      * @var array
      */
     protected $casts = [
-        'id_usuario' => 'integer',
+        //'id_usuario' => 'integer',
         'periodo_por_ano' => 'integer',
         'ano' => 'integer',
         'periodo' => 'integer',
@@ -89,13 +89,14 @@ class DatosMina extends Model
      * @var array
      */
     public static $rules = [
-        'id_usuario' => 'required|exists:App\Models\User,id',
+        //'id_usuario' => 'required|exists:App\Models\User,id',
         'periodo_por_ano' => 'required',
         'ano' => 'required',
         'periodo' => 'required',
         'meses_por_periodo' => 'nullable',
         'dias_por_mes' => 'nullable',
         'turnos_por_dia' => 'nullable',
+        'fecha_inicio' => 'nullable',
         'avance_tronadura' => 'nullable',
         'toneladas_incorporadas_tronadura' => 'nullable',
         'ritmo_extraccion' => 'nullable',
@@ -115,7 +116,7 @@ class DatosMina extends Model
      * @var array
      */
     public static $filters = [
-        'id_usuario' => 'decode_slug:App\Models\User',
+        //'id_usuario' => 'decode_slug:App\Models\User',
         'periodo_por_ano' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
         'periodo' => 'digit|cast:integer',

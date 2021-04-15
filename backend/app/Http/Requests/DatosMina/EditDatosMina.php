@@ -6,7 +6,7 @@ use App\Models\DatosMina\DatosMina;
 use Illuminate\Foundation\Http\FormRequest;
 use Waavi\Sanitizer\Laravel\SanitizesInput;
 
-class CreateDatosMina extends FormRequest
+class EditDatosMina extends FormRequest
 {
     use SanitizesInput;
 
