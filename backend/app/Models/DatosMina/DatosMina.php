@@ -37,7 +37,9 @@ class DatosMina extends Model
         'densidad_dilusion',
         'ley_esteril',
         'ley_mineral',
-        'ley_diluida'
+        'ley_diluida',
+        'tiros_por_m2',
+        'profundidad_tiro'
     ];
 
     /**
@@ -81,7 +83,9 @@ class DatosMina extends Model
         'densidad_dilusion' => DecimalCast::class,
         'ley_esteril' => DecimalCast::class,
         'ley_mineral' => DecimalCast::class,
-        'ley_diluida' => DecimalCast::class
+        'ley_diluida' => DecimalCast::class,
+        'tiros_por_m2' => DecimalCast::class,
+        'profundidad_tiro' => DecimalCast::class
     ];
 
     /**
@@ -107,7 +111,9 @@ class DatosMina extends Model
         'densidad_dilusion' => 'nullable',
         'ley_esteril' => 'nullable',
         'ley_mineral' => 'nullable',
-        'ley_diluida' => 'nullable'
+        'ley_diluida' => 'nullable',
+        'tiros_por_m2' => 'nullable',
+        'profundidad_tiro' => 'nullable'
     ];
 
     /**
@@ -148,4 +154,6 @@ class DatosMina extends Model
 	public function getSlugAttribute(){
         return $this->slug();
     }
+
+
 }

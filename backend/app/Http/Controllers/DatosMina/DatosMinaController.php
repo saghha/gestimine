@@ -7,9 +7,13 @@ use App\Repositories\DatosMina\DatosMinaRepository;
 use App\Http\Requests\DatosMina\ShowDatosMina;
 use App\Http\Requests\DatosMina\CreateDatosMina;
 use App\Http\Requests\DatosMina\EditDatosMina;
+use App\Http\Requests\DatosMina\DeleteDatosMina;
+use App\Http\Requests\DatosMina\DuplicateDatosMina;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Validator;
+use \Carbon\Carbon;
+use RuntimeException;
 
 class DatosMinaController extends Controller
 {
@@ -41,6 +45,22 @@ class DatosMinaController extends Controller
     }
 
     /**
+     * delete DatosMina
+     * @return DatosMina
+     */
+    public function destroy(DeleteDatosMina $request, $slug){
+        if ($this->repository->delete($slug)) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'DatosMina eliminado exitosamente',
+            ]);
+        } else return response()->json([
+            'status' => 'error',
+            'message' => 'Ha ocurrido un error eliminando el DatosMina'
+        ]);
+    }
+
+    /**
      * edit DatosMina
      * @return DatosMina
      */
@@ -57,6 +77,66 @@ class DatosMinaController extends Controller
                 'message' => 'Ha ocurrido un error inesperado',
             ]);
         }
+    }
+
+    /**
+     * duplicar DatosMina
+     * @return DatosMina
+     */
+    public function duplicar(DuplicateDatosMina $request){
+        $fecha = Arr::get($request, 'fecha_estado', now()->firstOfYear());
+        $fecha_year = new Carbon($fecha);
+        $model = $this->repository->queryAll()->where('id_usuario', $request->user()->id)->
+                    whereNull('deleted_at')->latest()->first();
+        if($model->periodo >= $model->periodo_por_ano) throw new RuntimeException("No se puede crear otro periodo, debe editar el periodo por año en el ultimo ingreso de datos mina");
+        //if(!($model->periodo == $model->periodo_por_ano) && !($model->ano == $fecha_year->year)) throw new RuntimeException("No se puede crear un periodo para el proximo año, debe completarse los periodos de este año");
+
+        $data = [
+            "periodo_por_ano" => $model->periodo_por_ano,
+            "ano" => $fecha_year->year,
+            "periodo" => $fecha_year->year != $model->ano ? 1 : $model->periodo + 1,
+            "meses_por_periodo" => $model->meses_por_periodo,
+            "dias_por_mes" => $model->dias_por_mes,
+            "turnos_por_dia" => $model->turnos_por_dia,
+            "fecha_inicio" => $fecha_year,
+            "avance_tronadura" => $model->avance_tronadura,
+            "toneladas_incorporadas_tronadura" => $model->toneladas_incorporadas_tronadura,
+            "ritmo_extraccion" => $model->ritmo_extraccion,
+            "mineral_recuperado_modulo" => $model->mineral_recuperado_modulo,
+            "mineral_recuperado_pilares" => $model->mineral_recuperado_pilares,
+            "densidad_esteril" => $model->densidad_esteril,
+            "densidad_mineral" => $model->densidad_mineral,
+            "densidad_dilusion" => $model->densidad_dilusion,
+            "ley_esteril" => $model->ley_esteril,
+            "ley_mineral" => $model->ley_mineral,
+            "ley_diluida" => $model->ley_diluida
+        ];
+
+        $model = $this->repository->create(Arr::only(array_merge($data, ['id_usuario' => $request->user()->id]), $this->repository->attributes()));
+        return $model;
+    }
+
+    /**
+     * get last DatosMina
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function ultimo(ShowDatosMina $request){
+        return $this->repository->queryAll()->where('id_usuario', $request->user()->id)->whereNull('deleted_at')->latest()->first();
+    }
+
+    /**
+     * Search DatosMina
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function buscar(ShowDatosMina $request){
+        return $this->repository->queryAll()->
+                where('id_usuario', $request->user()->id)->
+                where('periodo', $request->periodo)->
+                where('ano', $request->ano)->
+                whereNull('deleted_at')->
+                latest()->first();
     }
 
 }
