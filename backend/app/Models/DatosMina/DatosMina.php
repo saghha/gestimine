@@ -95,8 +95,8 @@ class DatosMina extends Model
     public static $rules = [
         //'id_usuario' => 'required|exists:App\Models\User,id',
         'periodo_por_ano' => 'required',
-        'ano' => 'required',
-        'periodo' => 'required',
+        'ano' => 'nullable',
+        'periodo' => 'nullable',
         'meses_por_periodo' => 'nullable',
         'dias_por_mes' => 'nullable',
         'turnos_por_dia' => 'nullable',

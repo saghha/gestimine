@@ -103,8 +103,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function buscar_cronograma(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         return $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
     }
@@ -115,8 +116,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function sumar_cronograma_anual(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
@@ -150,8 +152,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function sumar_cronograma_periodo(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
@@ -189,8 +192,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_cronograma_periodo(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
@@ -243,8 +247,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_plan_mina_periodo(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
@@ -297,12 +302,12 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_perforaciones_periodo(ShowPreparacionPeriodo $request){
+        $datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
-        $datos_mina = DatosMina::where('id', $request->datos_mina)->first();
         $avance_tronadura = $datos_mina->avance_tronadura;
         $profundidad_tiro = $datos_mina->profundidad_tiro;
         $ano = $request->ano;
@@ -354,12 +359,12 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_tronadura_periodo(ShowPreparacionPeriodo $request){
+        $datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
-        $datos_mina = DatosMina::where('id', $request->datos_mina)->first();
         $avance_tronadura = $datos_mina->avance_tronadura;
         $profundidad_tiro = $datos_mina->profundidad_tiro;
         $ano = $request->ano;
@@ -411,8 +416,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_cronograma_anual(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
@@ -459,8 +465,9 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_plan_mina_anual(ShowPreparacionPeriodo $request){
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
@@ -507,12 +514,12 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_perforaciones_anual(ShowPreparacionPeriodo $request){
+        $datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
-        $datos_mina = DatosMina::where('id', $request->datos_mina)->first();
         $avance_tronadura = $datos_mina->avance_tronadura;
         $profundidad_tiro = $datos_mina->profundidad_tiro;
         $ano = $request->ano;
@@ -560,12 +567,12 @@ class CronogramaPreparacionPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_tronadura_anual(ShowPreparacionPeriodo $request){
+        $datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $request->datos_mina)->
+                where('id_datos_mina', $datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
-        $datos_mina = DatosMina::where('id', $request->datos_mina)->first();
         $avance_tronadura = $datos_mina->avance_tronadura;
         $profundidad_tiro = $datos_mina->profundidad_tiro;
         $ano = $request->ano;

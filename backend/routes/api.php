@@ -56,4 +56,12 @@ Route::group(['prefix' => 'cronograma', 'namespace' => 'Cronograma'], function()
         Route::get('mostrar-tronaduras-anual', 'CronogramaPreparacionPeriodoController@mostrar_tronadura_anual');
     });
     Route::apiResource('preparacion', 'CronogramaPreparacionPeriodoController');
+    Route::group(['prefix' => 'produccion'], function(){
+        Route::get('buscar-cronograma', 'CronogramaProduccionPeriodoController@buscar_cronograma');
+        Route::get('sumar-cronograma-ano', 'CronogramaProduccionPeriodoController@sumar_cronograma_anual');
+        Route::get('sumar-cronograma-periodo', 'CronogramaProduccionPeriodoController@sumar_cronograma_periodo');
+        Route::get('mostrar-cronograma-periodo', 'CronogramaProduccionPeriodoController@mostrar_cronograma_periodo');
+        Route::get('mostrar-cronograma-anual', 'CronogramaProduccionPeriodoController@mostrar_cronograma_anual');
+    });
+    Route::apiResource('produccion', 'CronogramaProduccionPeriodoController');
 });
