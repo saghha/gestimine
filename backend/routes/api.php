@@ -65,3 +65,9 @@ Route::group(['prefix' => 'cronograma', 'namespace' => 'Cronograma'], function()
     });
     Route::apiResource('produccion', 'CronogramaProduccionPeriodoController');
 });
+Route::group(['prefix' => 'registro-datos', 'namespace' => 'RegistroDatos'], function(){
+    Route::group(['prefix' => 'evento'], function(){
+        
+    });
+    Route::apiResource('evento', 'EventoPeriodoController');
+});
