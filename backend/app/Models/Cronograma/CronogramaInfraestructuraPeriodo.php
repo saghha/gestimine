@@ -144,5 +144,13 @@ class CronogramaInfraestructuraPeriodo extends Model
         return $this->hasMany(\App\Models\Cronograma\ValorInfraestructuraPeriodo::class, 'id_infraestructura', 'id');
     }
 
+    /**
+     * the ValorInfraestructuraPeriodo related to the model
+     * @return HasMany
+     */
+    public function perforaciones(){
+        return $this->hasMany(\App\Models\Operacion\PerforacionInfraestructuraPeriodo::class, 'id_infraestructura', 'id');
+    }
+
     
 }

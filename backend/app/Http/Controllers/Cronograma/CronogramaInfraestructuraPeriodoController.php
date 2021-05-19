@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Cronograma;
 
 use Illuminate\Http\Request;
 use App\Models\Cronograma\ValorInfraestructuraPeriodo;
+use App\Models\Operacion\PerforacionInfraestructuraPeriodo;
 use App\Models\DatosMina\DatosMina;
 use App\Repositories\Cronograma\CronogramaInfraestructuraPeriodoRepository;
 use App\Repositories\Cronograma\ValorInfraestructuraPeriodoRepository;
+use App\Repositories\Operacion\PerforacionInfraestructuraPeriodoRepository;
 use App\Http\Requests\Cronograma\InfraestructuraPeriodo\ShowInfraestructuraPeriodo;
 use App\Http\Requests\Cronograma\InfraestructuraPeriodo\CreateInfraestructuraPeriodo;
 use App\Http\Requests\Cronograma\InfraestructuraPeriodo\EditInfraestructuraPeriodo;
@@ -15,6 +17,10 @@ use App\Http\Requests\Cronograma\ValorInfraestructuraPeriodo\ShowValorInfraestru
 use App\Http\Requests\Cronograma\ValorInfraestructuraPeriodo\CreateValorInfraestructuraPeriodo;
 use App\Http\Requests\Cronograma\ValorInfraestructuraPeriodo\EditValorInfraestructuraPeriodo;
 use App\Http\Requests\Cronograma\ValorInfraestructuraPeriodo\DeleteValorInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\ShowPerforacionInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\CreatePerforacionInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\EditPerforacionInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\DeletePerforacionInfraestructuraPeriodo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Validator;
@@ -47,13 +53,20 @@ class CronogramaInfraestructuraPeriodoController extends Controller
      */
     public function store(CreateInfraestructuraPeriodo $request){
         $valor_repository = new ValorInfraestructuraPeriodoRepository(new ValorInfraestructuraPeriodo());
+        $perforacion_repository = new PerforacionInfraestructuraPeriodoRepository(new PerforacionInfraestructuraPeriodo());
         $data = $request->validated();
         $model = $this->repository->create(Arr::only($data, $this->repository->attributes()));
         foreach (Arr::get($data, 'valores', []) as $key => $valor) {
             $dataValor = array_merge($valor, ['id_infraestructura' => $model->id]);
             $valores = $valor_repository->create(Arr::only($dataValor, $valor_repository->attributes()));
+            $dataPerforacion = [
+                'id_infraestructura' => $model->id,
+                'periodo' => $valor['periodo'],
+                'ano' => $valor['ano'],
+            ];
+            $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
         }
-        return $model->load('valores');
+        return $model->load(['valores','perforaciones']);
     }
 
     /**
@@ -79,16 +92,24 @@ class CronogramaInfraestructuraPeriodoController extends Controller
      */
     public function update(EditInfraestructuraPeriodo $request, $slug){
         $valor_repository = new ValorInfraestructuraPeriodoRepository(new ValorInfraestructuraPeriodo());
+        $perforacion_repository = new PerforacionInfraestructuraPeriodoRepository(new PerforacionInfraestructuraPeriodo());
         $data = $request->validated();
         $infraestructura = $this->repository->find($slug);
         if($this->repository->edit(Arr::only($data, $this->repository->attributes()), $slug)) {
             $infraestructura->valores()->delete();
+            $infraestructura->perforaciones()->delete();
             foreach (Arr::get($data, 'valores', []) as $key => $detalle) {
                 $dataDetalle = array_merge($detalle, ['id_infraestructura' => $infraestructura->id]);
                 $detalles = $valor_repository->create(Arr::only($dataDetalle, $valor_repository->attributes()));
+                $dataPerforacion = [
+                    'id_infraestructura' => $infraestructura->id,
+                    'periodo' => $detalle['periodo'],
+                    'ano' => $detalle['ano'],
+                ];
+                $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
             }
             $infraestructura->refresh();
-            return $infraestructura->load('valores');
+            return $infraestructura->load(['valores','perforaciones']);
         } else {
             return response()->json([
                 'status' => 'error',

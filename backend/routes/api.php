@@ -71,3 +71,9 @@ Route::group(['prefix' => 'registro-datos', 'namespace' => 'RegistroDatos'], fun
     });
     Route::apiResource('evento', 'EventoPeriodoController');
 });
+Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
+    Route::group(['prefix' => 'perforacion-infraestructura'], function(){
+        
+    });
+    Route::apiResource('perforacion-infraestructura', 'PerforacionInfraestructuraPeriodoController');
+});
