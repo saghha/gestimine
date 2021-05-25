@@ -75,7 +75,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
      */
     public function destroy(DeleteInfraestructuraPeriodo $request, $slug){
         $detalles = $this->repository->find($slug);
-        if ($detalles->delete() && $detalles->valores()->delete()) {
+        if ($detalles->delete() && $detalles->valores()->delete() && $detalles->perforaciones()->delete()) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'InfraestructuraPeriodo eliminado exitosamente',

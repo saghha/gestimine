@@ -76,4 +76,11 @@ Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
         
     });
     Route::apiResource('perforacion-infraestructura', 'PerforacionInfraestructuraPeriodoController');
+    Route::group(['prefix' => 'tareas-perforacion-inf'], function(){
+        Route::post('generica', 'TareasPerforacionInfraestructuraPeriodoController@generica');
+        Route::get('tarea-activa/{slug}', 'TareasPerforacionInfraestructuraPeriodoController@tarea_activa');
+        Route::post('editar-tarea-activa', 'TareasPerforacionInfraestructuraPeriodoController@editar_tarea_activa');
+        Route::post('reiniciar-tarea-activa', 'TareasPerforacionInfraestructuraPeriodoController@reiniciar_tarea_activa');
+    });
+    Route::apiResource('tareas-perforacion-inf', 'TareasPerforacionInfraestructuraPeriodoController');
 });

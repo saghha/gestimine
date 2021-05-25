@@ -35,6 +35,50 @@ class PerforacionInfraestructuraPeriodoController extends Controller
         $data = $this->repository->queryAll()->get();
         return $data;
     }
+
+    /**
+     * create PerforacionInfraestructuraPeriodo
+     * @return PerforacionInfraestructuraPeriodo
+     */
+    public function store(CreatePerforacionInfraestructuraPeriodo $request){
+        $data = $request->validated();
+        $model = $this->repository->create(Arr::only($data, $this->repository->attributes()));
+        return $model;
+    }
     
+    /**
+     * edit PerforacionInfraestructuraPeriodo
+     * @return PerforacionInfraestructuraPeriodo
+     */
+    public function update(EditPerforacionInfraestructuraPeriodo $request, $slug){
+        $data = $request->validated();
+        if($this->repository->edit(Arr::only($data, $this->repository->attributes()), $slug)) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Los datos de la mina se han actualizado',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ha ocurrido un error inesperado',
+            ]);
+        }
+    }
+
+    /**
+     * delete PerforacionInfraestructuraPeriodo
+     * @return PerforacionInfraestructuraPeriodo
+     */
+    public function destroy(DeletePerforacionInfraestructuraPeriodo $request, $slug){
+        if ($this->repository->delete($slug)) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'PerforacionInfraestructuraPeriodo eliminado exitosamente',
+            ]);
+        } else return response()->json([
+            'status' => 'error',
+            'message' => 'Ha ocurrido un error eliminando el PerforacionInfraestructuraPeriodo'
+        ]);
+    }
     
 }

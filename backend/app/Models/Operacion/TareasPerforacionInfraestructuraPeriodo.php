@@ -8,7 +8,7 @@ use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
 use App\Casts\DecimalCast;
 
-class PerforacionInfraestructuraPeriodo extends Model
+class TareasPerforacionInfraestructuraPeriodo extends Model
 {
     use HasHashSlug;
     use SoftDeletes;
@@ -19,13 +19,14 @@ class PerforacionInfraestructuraPeriodo extends Model
      * @var array
      */
     protected $fillable = [
-        'id_infraestructura',
+        'id_perforacion',
         'periodo',
         'ano',
+        'turno',
         'termino',
-        'registro_desgloce',
-        'valor_perforacion',
-        'total_perforacion'
+        'orden',
+        'nombre_tarea',
+        'porcentaje_avance'
     ];
 
     /**
@@ -34,7 +35,7 @@ class PerforacionInfraestructuraPeriodo extends Model
      * @var array
      */
     protected $hidden = [
-        'id_infraestructura',
+        'id_perforacion',
     ];
 
     /**
@@ -52,13 +53,13 @@ class PerforacionInfraestructuraPeriodo extends Model
      * @var array
      */
     protected $casts = [
-        'id_infraestructura' => 'integer',
+        'id_perforacion' => 'integer',
         'periodo' => 'integer',
         'ano' => 'integer',
+        'turno' => 'integer',
         'termino' => 'boolean',
-        'registro_desgloce' => DecimalCast::class,
-        'valor_perforacion' => DecimalCast::class,
-        'total_perforacion' => DecimalCast::class
+        'orden' => 'integer',
+        'porcentaje_avance' => DecimalCast::class
     ];
 
     /**
@@ -66,13 +67,14 @@ class PerforacionInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $rules = [
-        'id_infraestructura'  => 'required|exists:App\Models\Cronograma\CronogramaInfraestructuraPeriodo,id',
+        'id_perforacion'  => 'required|exists:App\Models\Operacion\PerforacionInfraestructuraPeriodo,id',
         'periodo' => 'nullable',
         'ano' => 'nullable',
+        'turno' => 'nullable',
         'termino' => 'nullable',
-        'registro_desgloce' => 'nullable',
-        'valor_perforacion' => 'nullable',
-        'total_perforacion' => 'nullable'
+        'orden' => 'nullable',
+        'nombre_tarea' => 'nullable',
+        'porcentaje_avance' => 'nullable'
     ];
 
     /**
@@ -81,9 +83,12 @@ class PerforacionInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_infraestructura' => 'decode_slug:App\Models\Cronograma\CronogramaInfraestructuraPeriodo',
+        //'id_perforacion' => 'decode_slug:App\Models\Operacion\PerforacionInfraestructuraPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
+        'turno' => 'digit|cast:integer',
+        'orden' => 'digit|cast:integer',
+        'nombre_tarea'  => 'trim|escape|uppercase',
     ];
 
     /**
@@ -112,11 +117,10 @@ class PerforacionInfraestructuraPeriodo extends Model
     //DEPENDENCIAS DEL MODELO//
 
     /**
-     * the TareasPeriodoInfraestructuraPeriodo related to the model
-     * @return HasMany
+     * the PerforacionInfraestructura related to the model
+     * @return BelongsTo
      */
-    public function tareas(){
-        return $this->hasMany(\App\Models\Operacion\TareasPerforacionInfraestructuraPeriodo::class, 'id_perforacion', 'id');
+    public function perforacion(){
+        return $this->belongsTo(\App\Models\Operacion\PerforacionInfraestructuraPeriodo::class, 'id_perforacion', 'id');
     }
-
 }
