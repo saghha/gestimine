@@ -139,4 +139,46 @@ class DatosMinaController extends Controller
                 latest()->first();
     }
 
+    /**
+     * get last DatosMina periodo
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function periodo(ShowDatosMina $request){
+        $mina = $this->repository->queryAll()->where('id_usuario', $request->user()->id)->whereNull('deleted_at')->latest()->first();
+        switch ($mina->meses_por_periodo) {
+            case 1:
+                $periodo = "MES";
+                break;
+            case 2:
+                $periodo = "BIMESTRE";
+                break;
+            case 3:
+                $periodo = "TRIMESTRE";
+                break;
+            case 4:
+                $periodo = "CUATRIMESTRE";
+                break;
+            case 6:
+                $periodo = "SEMESTRE";
+                break;
+            case 12:
+                $periodo = "AÑO";
+                break;
+            default:
+                $periodo = "PERIODO DE ".$mina->meses_por_periodo." MESES";
+                break;
+        }
+        $tiempo_inicial = Carbon::createFromFormat('Y-m-d H:i:s', $mina->fecha_inicio);
+        $tiempo_actual = Carbon::now();
+        $periodo_actual = floor(($tiempo_inicial->diffInMonths($tiempo_actual))/$mina->meses_por_periodo) + 1;
+        $resp = [
+            "ano" => $mina->ano,
+            "rango_periodo" => $mina->meses_por_periodo,
+            "referencia" => $periodo,
+            "periodo_actual" => $periodo_actual
+        ];
+        return $resp;
+    }
+
 }

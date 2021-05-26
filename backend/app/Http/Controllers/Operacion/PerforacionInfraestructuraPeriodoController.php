@@ -33,7 +33,7 @@ class PerforacionInfraestructuraPeriodoController extends Controller
      */
     public function index(ShowPerforacionInfraestructuraPeriodo $request){
         $data = $this->repository->queryAll()->get();
-        return $data;
+        return $data->load('infraestructura');
     }
 
     /**
@@ -55,7 +55,7 @@ class PerforacionInfraestructuraPeriodoController extends Controller
         if($this->repository->edit(Arr::only($data, $this->repository->attributes()), $slug)) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Los datos de la mina se han actualizado',
+                'message' => 'Los datos de la perforacion se han actualizado',
             ]);
         } else {
             return response()->json([

@@ -8,7 +8,7 @@ use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
 use App\Casts\DecimalCast;
 
-class PerforacionInfraestructuraPeriodo extends Model
+class TronaduraInfraestructuraPeriodo extends Model
 {
     use HasHashSlug;
     use SoftDeletes;
@@ -24,8 +24,8 @@ class PerforacionInfraestructuraPeriodo extends Model
         'ano',
         'termino',
         'registro_desgloce',
-        'valor_perforacion',
-        'total_perforacion'
+        'valor_tronadura',
+        'total_tronadura'
     ];
 
     /**
@@ -57,8 +57,8 @@ class PerforacionInfraestructuraPeriodo extends Model
         'ano' => 'integer',
         'termino' => 'boolean',
         'registro_desgloce' => DecimalCast::class,
-        'valor_perforacion' => DecimalCast::class,
-        'total_perforacion' => DecimalCast::class
+        'valor_tronadura' => DecimalCast::class,
+        'total_tronadura' => DecimalCast::class
     ];
 
     /**
@@ -71,8 +71,8 @@ class PerforacionInfraestructuraPeriodo extends Model
         'ano' => 'nullable',
         'termino' => 'nullable',
         'registro_desgloce' => 'nullable',
-        'valor_perforacion' => 'nullable',
-        'total_perforacion' => 'nullable'
+        'valor_tronadura' => 'nullable',
+        'total_tronadura' => 'nullable'
     ];
 
     /**
@@ -116,7 +116,7 @@ class PerforacionInfraestructuraPeriodo extends Model
      * @return HasMany
      */
     public function tareas(){
-        return $this->hasMany(\App\Models\Operacion\TareasPerforacionInfraestructuraPeriodo::class, 'id_perforacion', 'id');
+        return $this->hasMany(\App\Models\Operacion\TareasTronaduraInfraestructuraPeriodo::class, 'id_tronadura', 'id');
     }
 
     /**
@@ -126,5 +126,4 @@ class PerforacionInfraestructuraPeriodo extends Model
     public function infraestructura(){
         return $this->belongsTo(\App\Models\Cronograma\CronogramaInfraestructuraPeriodo::class, 'id_infraestructura', 'id');
     }
-
 }

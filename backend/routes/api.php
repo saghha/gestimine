@@ -25,6 +25,7 @@ Route::group(['prefix' => 'datos-mina', 'namespace' => 'DatosMina'], function(){
     Route::post('duplicar', 'DatosMinaController@duplicar');
     Route::get('ultimo', 'DatosMinaController@ultimo');
     Route::get('buscar', 'DatosMinaController@buscar');
+    Route::get('periodo', 'DatosMinaController@periodo');
     Route::apiResource('informacion', 'DatosMinaController');
 });
 Route::group(['prefix' => 'cronograma', 'namespace' => 'Cronograma'], function(){
@@ -83,4 +84,8 @@ Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
         Route::post('reiniciar-tarea-activa', 'TareasPerforacionInfraestructuraPeriodoController@reiniciar_tarea_activa');
     });
     Route::apiResource('tareas-perforacion-inf', 'TareasPerforacionInfraestructuraPeriodoController');
+    Route::group(['prefix' => 'tronadura-infraestructura'], function(){
+        
+    });
+    Route::apiResource('tronadura-infraestructura', 'TronaduraInfraestructuraPeriodoController');
 });

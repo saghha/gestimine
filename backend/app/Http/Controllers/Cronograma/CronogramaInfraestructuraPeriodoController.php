@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Cronograma;
 use Illuminate\Http\Request;
 use App\Models\Cronograma\ValorInfraestructuraPeriodo;
 use App\Models\Operacion\PerforacionInfraestructuraPeriodo;
+use App\Models\Operacion\TronaduraInfraestructuraPeriodo;
 use App\Models\DatosMina\DatosMina;
 use App\Repositories\Cronograma\CronogramaInfraestructuraPeriodoRepository;
 use App\Repositories\Cronograma\ValorInfraestructuraPeriodoRepository;
 use App\Repositories\Operacion\PerforacionInfraestructuraPeriodoRepository;
+use App\Repositories\Operacion\TronaduraInfraestructuraPeriodoRepository;
 use App\Http\Requests\Cronograma\InfraestructuraPeriodo\ShowInfraestructuraPeriodo;
 use App\Http\Requests\Cronograma\InfraestructuraPeriodo\CreateInfraestructuraPeriodo;
 use App\Http\Requests\Cronograma\InfraestructuraPeriodo\EditInfraestructuraPeriodo;
@@ -21,6 +23,10 @@ use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\ShowPerforaci
 use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\CreatePerforacionInfraestructuraPeriodo;
 use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\EditPerforacionInfraestructuraPeriodo;
 use App\Http\Requests\Operacion\Perforacion\InfraestructuraPeriodo\DeletePerforacionInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Tronadura\InfraestructuraPeriodo\ShowTronaduraInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Tronadura\InfraestructuraPeriodo\CreateTronaduraInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Tronadura\InfraestructuraPeriodo\EditTronaduraInfraestructuraPeriodo;
+use App\Http\Requests\Operacion\Tronadura\InfraestructuraPeriodo\DeleteTronaduraInfraestructuraPeriodo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Validator;
@@ -54,6 +60,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
     public function store(CreateInfraestructuraPeriodo $request){
         $valor_repository = new ValorInfraestructuraPeriodoRepository(new ValorInfraestructuraPeriodo());
         $perforacion_repository = new PerforacionInfraestructuraPeriodoRepository(new PerforacionInfraestructuraPeriodo());
+        $tronadura_repository = new TronaduraInfraestructuraPeriodoRepository(new TronaduraInfraestructuraPeriodo());
         $data = $request->validated();
         $model = $this->repository->create(Arr::only($data, $this->repository->attributes()));
         foreach (Arr::get($data, 'valores', []) as $key => $valor) {
@@ -64,9 +71,15 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'periodo' => $valor['periodo'],
                 'ano' => $valor['ano'],
             ];
+            $dataTronadura = [
+                'id_infraestructura' => $model->id,
+                'periodo' => $valor['periodo'],
+                'ano' => $valor['ano'],
+            ];
             $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
+            $tronaduras = $tronadura_repository->create(Arr::only($dataTronadura, $tronadura_repository->attributes()));
         }
-        return $model->load(['valores','perforaciones']);
+        return $model->load(['valores','perforaciones','tronaduras']);
     }
 
     /**
@@ -75,7 +88,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
      */
     public function destroy(DeleteInfraestructuraPeriodo $request, $slug){
         $detalles = $this->repository->find($slug);
-        if ($detalles->delete() && $detalles->valores()->delete() && $detalles->perforaciones()->delete()) {
+        if ($detalles->delete() && $detalles->valores()->delete() && $detalles->perforaciones()->delete() && $detalles->tronaduras()->delete()) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'InfraestructuraPeriodo eliminado exitosamente',
@@ -93,11 +106,13 @@ class CronogramaInfraestructuraPeriodoController extends Controller
     public function update(EditInfraestructuraPeriodo $request, $slug){
         $valor_repository = new ValorInfraestructuraPeriodoRepository(new ValorInfraestructuraPeriodo());
         $perforacion_repository = new PerforacionInfraestructuraPeriodoRepository(new PerforacionInfraestructuraPeriodo());
+        $tronadura_repository = new TronaduraInfraestructuraPeriodoRepository(new TronaduraInfraestructuraPeriodo());
         $data = $request->validated();
         $infraestructura = $this->repository->find($slug);
         if($this->repository->edit(Arr::only($data, $this->repository->attributes()), $slug)) {
             $infraestructura->valores()->delete();
             $infraestructura->perforaciones()->delete();
+            $infraestructura->tronaduras()->delete();
             foreach (Arr::get($data, 'valores', []) as $key => $detalle) {
                 $dataDetalle = array_merge($detalle, ['id_infraestructura' => $infraestructura->id]);
                 $detalles = $valor_repository->create(Arr::only($dataDetalle, $valor_repository->attributes()));
@@ -106,10 +121,16 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     'periodo' => $detalle['periodo'],
                     'ano' => $detalle['ano'],
                 ];
+                $dataTronadura = [
+                    'id_infraestructura' => $infraestructura->id,
+                    'periodo' => $detalle['periodo'],
+                    'ano' => $detalle['ano'],
+                ];
                 $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
+                $tronaduras = $tronadura_repository->create(Arr::only($dataTronadura, $tronadura_repository->attributes()));
             }
             $infraestructura->refresh();
-            return $infraestructura->load(['valores','perforaciones']);
+            return $infraestructura->load(['valores','perforaciones','tronaduras']);
         } else {
             return response()->json([
                 'status' => 'error',
