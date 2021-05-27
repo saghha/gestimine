@@ -17,6 +17,7 @@ import Upgrade from 'src/pages/Upgrade.vue'
 // custom Page
 import Test from 'src/pages/Test'
 import DatosMina from 'src/pages/DatosMina/DatosMina'
+import Cronograma from 'src/pages/Cronograma/Cronograma'
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
         path: 'datos_mina',
         name: 'DatosMina',
         component: DatosMina
+      },
+      {
+        path: 'cronograma',
+        name: 'Cronograma',
+        component: Cronograma
       },
       {
         path: 'overview',

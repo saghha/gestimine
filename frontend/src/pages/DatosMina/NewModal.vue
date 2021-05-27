@@ -1,7 +1,7 @@
 <template>
   <b-modal v-model="showModal" size="lg" v-if="showModal" hide-footer @hide="closeModal()">
     <template v-slot:modal-title>
-      <strong>Editar Datos mina</strong>
+      <strong>Crear Datos Mina</strong>
     </template>
     <ValidationObserver v-slot="{invalid}">
       <div class="row">
@@ -18,7 +18,7 @@
           <ValidationProvider rules="required" v-slot="v">
             <div class="form-group">
               <label for="tipo" :class="{'text-danger': v.failedRules.required}">Nombre Indicador</label>
-              <b-form-input v-model="datos.tipo" id="tipo" disabled/>
+              <b-form-input v-model="datos.tipo" id="tipo"/>
               <span class="text-danger" v-if="v.failedRules.required">El nombre del indicador es requerido</span>
             </div>
           </ValidationProvider>
@@ -36,13 +36,13 @@
           <ValidationProvider rules="required" v-slot="v">
             <div class="form-group">
               <label for="unidad_medida" :class="{'text-danger': v.failedRules.required}">Unidad de Medida</label>
-              <b-form-input v-model="datos.unidad_medida" id="unidad_medida" disabled/>
+              <b-form-input v-model="datos.unidad_medida" id="unidad_medida"/>
               <span class="text-danger" v-if="v.failedRules.required">La unidad de medida es requerida</span>
             </div>
           </ValidationProvider>
         </div>
         <div class="col-12 text-right">
-          <b-button variant="warning">Editar información</b-button>
+          <b-button variant="success">Agregar Dato de Mina</b-button>
         </div>
       </div>
     </ValidationObserver>
@@ -56,10 +56,6 @@ export default {
       type: Boolean,
       default: false
     },
-    info: {
-      type: Object,
-      default: {}
-    }
   },
   data () {
     return {
@@ -75,13 +71,12 @@ export default {
     }
   },
   created () {
-    this.datos = JSON.parse(JSON.stringify(this.info))
   },
   methods: {
     closeModal: function () {
       this.$emit('close')
     },
-    editInfo: function () {
+    createInfo: function () {
       //aca se hace la consulta axios
     }
   }

@@ -23,9 +23,11 @@
     "v-tooltip": "^2.0.0-rc.33",
     "vee-validate": "^3.3.7",
     "vue": "^2.6.12",
+    "vue-currency-input": "^1.22.6",
     "vue-dni": "^1.0.1",
     "vue-loading-overlay": "^3.4.2",
     "vue-router": "^3.0.2",
+    "vue-select": "^3.11.2",
     "vue2-google-maps": "^0.8.4",
     "vuex": "^3.6.2"
   },

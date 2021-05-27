@@ -27,12 +27,14 @@ import * as rules from 'vee-validate/dist/rules';
 // router setup
 import routes from './routes/routes'
 import store from './store/index'
+import vSelect from 'vue-select'
 import { rutInputDirective } from 'vue-dni';
 import './registerServiceWorker'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-select/dist/vue-select.css';
 // plugin setup
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
@@ -41,6 +43,7 @@ Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
 Vue.directive('rut', rutInputDirective);
+Vue.component('v-select', vSelect)
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 extend('rut', rutValidator)
