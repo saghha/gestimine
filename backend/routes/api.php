@@ -74,7 +74,7 @@ Route::group(['prefix' => 'registro-datos', 'namespace' => 'RegistroDatos'], fun
 });
 Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
     Route::group(['prefix' => 'perforacion-infraestructura'], function(){
-        
+        Route::get('buscar', 'PerforacionInfraestructuraPeriodoController@buscar');
     });
     Route::apiResource('perforacion-infraestructura', 'PerforacionInfraestructuraPeriodoController');
     Route::group(['prefix' => 'tareas-perforacion-inf'], function(){
@@ -85,7 +85,14 @@ Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
     });
     Route::apiResource('tareas-perforacion-inf', 'TareasPerforacionInfraestructuraPeriodoController');
     Route::group(['prefix' => 'tronadura-infraestructura'], function(){
-        
+        Route::get('buscar', 'TronaduraInfraestructuraPeriodoController@buscar');
     });
     Route::apiResource('tronadura-infraestructura', 'TronaduraInfraestructuraPeriodoController');
+    Route::group(['prefix' => 'tareas-tronadura-inf'], function(){
+        Route::post('generica', 'TareasTronaduraInfraestructuraPeriodoController@generica');
+        Route::get('tarea-activa/{slug}', 'TareasTronaduraInfraestructuraPeriodoController@tarea_activa');
+        Route::post('editar-tarea-activa', 'TareasTronaduraInfraestructuraPeriodoController@editar_tarea_activa');
+        Route::post('reiniciar-tarea-activa', 'TareasTronaduraInfraestructuraPeriodoController@reiniciar_tarea_activa');
+    });
+    Route::apiResource('tareas-tronadura-inf', 'TareasTronaduraInfraestructuraPeriodoController');
 });

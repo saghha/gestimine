@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Operacion;
 
+use App\Models\DatosMina\DatosMina;
 use App\Models\Operacion\TronaduraInfraestructuraPeriodo;
 use App\Models\Cronograma\CronogramaInfraestructuraPeriodo;
 use App\Repositories\Cronograma\CronogramaInfraestructuraPeriodoRepository;
@@ -79,5 +80,18 @@ class TronaduraInfraestructuraPeriodoController extends Controller
             'status' => 'error',
             'message' => 'Ha ocurrido un error eliminando el TronaduraInfraestructuraPeriodo'
         ]);
+    }
+
+    /**
+     * get paged index of ShowCronogramaInfraestructuraPeriodo
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function buscar(ShowTronaduraInfraestructuraPeriodo $request){
+        $datos_mina = DatosMina::findBySlugOrFail($request->id_datos_mina);
+        $data = $this->repository->queryAll()->whereHas('infraestructura', function($infraestructura) use ($datos_mina) {
+            $infraestructura->where('id_datos_mina', $datos_mina->id);
+        })->where('periodo',$request->periodo)->where('ano',$request->ano)->get();
+        return $data->load(['infraestructura','tareas']);
     }
 }

@@ -22,6 +22,7 @@ use Illuminate\Support\Arr;
 use Validator;
 use \Carbon\Carbon;
 use RuntimeException;
+use Illuminate\Http\Request;
 
 class TareasPerforacionInfraestructuraPeriodoController extends Controller
 {
