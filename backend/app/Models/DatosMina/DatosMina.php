@@ -66,7 +66,7 @@ class DatosMina extends Model
      * @var array
      */
     protected $casts = [
-        //'id_usuario' => 'integer',
+        'id_usuario' => 'integer',
         'periodo_por_ano' => 'integer',
         'ano' => 'integer',
         'periodo' => 'integer',
