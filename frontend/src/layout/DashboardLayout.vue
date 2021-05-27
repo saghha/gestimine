@@ -10,7 +10,7 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Datos de Mina</p>
       </sidebar-link>
-      <sidebar-link to="/admin/user">
+      <sidebar-link to="/admin/cronograma">
         <i class="nc-icon nc-circle-09"></i>
         <p>Cronograma</p>
       </sidebar-link>

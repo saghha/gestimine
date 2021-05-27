@@ -21,3 +21,4 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::post('login', 'AuthController@login');
     Route::get('profile', 'AuthController@me');
 });
+Route::get('test', 'TestController@scraping');
