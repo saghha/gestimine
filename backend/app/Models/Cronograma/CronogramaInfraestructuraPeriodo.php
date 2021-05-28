@@ -160,5 +160,13 @@ class CronogramaInfraestructuraPeriodo extends Model
         return $this->hasMany(\App\Models\Operacion\TronaduraInfraestructuraPeriodo::class, 'id_infraestructura', 'id');
     }
 
+    /**
+     * the TronadurasPeriodo related to the model
+     * @return HasMany
+     */
+    public function carguios(){
+        return $this->hasMany(\App\Models\Operacion\CarguioInfraestructuraPeriodo::class, 'id_infraestructura', 'id');
+    }
+
     
 }
