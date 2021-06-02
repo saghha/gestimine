@@ -122,7 +122,7 @@ class DatosMinaController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function ultimo(ShowDatosMina $request){
-        return $this->repository->queryAll()->where('id_usuario', $request->user()->id)->whereNull('deleted_at')->latest()->first();
+        return $this->repository->queryAll()->whereNull('deleted_at')->latest()->first();
     }
 
     /**
