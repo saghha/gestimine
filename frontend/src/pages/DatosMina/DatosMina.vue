@@ -168,6 +168,7 @@
   </div>
 </template>
 <script>
+import helpers from '../../components/Helper'
 export default {
   name: 'DatosMina',
   components: {
@@ -199,9 +200,27 @@ export default {
     }
   },
   created () {
+    this.$nextTick(function () {
+      this.$store.commit('setLoading', true)
+      var promises = []
+      promises.push(this.getDatosMina())
 
+      Promise.all(promises).then(() => {
+        this.$store.commit('setLoading', false)
+      }).catch(() => {
+        this.$store.commit('setLoading', false)
+      })
+    })
   },
   methods: {
+    ...helpers,
+    getDatosMina: function () {
+      return axios.get('datos-mina/ultimo').then((response) => {
+        this.datos_mina = response.data
+      }).catch((err) => {
+        this.showToast({icon: 'error', title: err.response.data.message})
+      })
+    },
     handleEdit: function (cond) {
       if(!cond) {
         this.datos_mina = JSON.parse(JSON.stringify(this.respaldo_datos_mina))
