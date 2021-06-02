@@ -1,130 +1,237 @@
 <template>
   <div class="col-lg-12 mt-2">
-    <div class="mt-2 mb-2">
-      <b-button variant="primary" class="" @click="handleNewModal(true)">Agregar Dato de Mina</b-button>
-    </div>
     <div class="card">
       <div class="card-body">
-        <b-tabs>
-          <b-tab title="Datos Generales">
-            <div class="col-12">
-              <b-table :items="datos" :fields="fields" responsive small hover no-border-collapse striped>
-                <template #cell(actions)="row">
-                  <b-button-group>
-                    <b-button variant="primary" class="btn-sm" @click="handleEditModal(row.item, 'datos_generales', true)">Editar</b-button>
-                    <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                  </b-button-group>
-                </template>
-              </b-table>
+        <div class="row">
+          <div class="col-6">
+            <h4 class="card-title">Datos Mina</h4>
+          </div>
+          <div class="col-6 text-right">
+            <b-button variant="info" class="" v-if="!editMode" @click="handleEdit(true)">Habilitar Edición</b-button>
+            <b-button variant="warning" class="" v-else @click="handleEdit(false)">Cancelar Edición</b-button>
+          </div>
+        </div>
+        <div class="mb-2"></div>
+        <ValidationObserver v-slot="{invalid}">
+          <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Periodos por año</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.periodo_por_ano" locale="es" :precision="0" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
             </div>
-          </b-tab>
-          <b-tab title="Mineral Recuperado">
-            <div class="col-12">
-              <b-table :items="datos_recuperados" :fields="fields" responsive small hover no-border-collapse striped>
-                <template #cell(actions)="row">
-                  <b-button-group>
-                    <b-button variant="primary" class="btn-sm" @click="handleEditModal(row.item, 'mineral_recuperado', true)">Editar</b-button>
-                    <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                  </b-button-group>
-                </template>
-              </b-table>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Meses por periodo</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.meses_por_periodo" locale="es" :precision="0" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
             </div>
-          </b-tab>
-          <b-tab title="Perforaciones">
-            <b-table :items="datos_perforacion" :fields="fields" responsive small hover no-border-collapse striped>
-              <template #cell(actions)="row">
-                <b-button-group>
-                  <b-button variant="primary" class="btn-sm" @click="handleEditModal(row.item, 'perforaciones', true)">Editar</b-button>
-                  <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                </b-button-group>
-              </template>
-            </b-table>
-          </b-tab>
-          <b-tab title="Tronadura">
-            <b-table :items="datos_tronadura" :fields="fields" responsive small hover no-border-collapse striped>
-              <template #cell(actions)="row">
-                <b-button-group>
-                  <b-button variant="primary" class="btn-sm" @click="handleEditModal(row.item, 'tronadura', true)">Editar</b-button>
-                  <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                </b-button-group>
-              </template>
-            </b-table>
-          </b-tab>
-          <b-tab title="Operativos">
-            <b-table :items="datos_operativos" :fields="fields" responsive small hover no-border-collapse striped>
-              <template #cell(actions)="row">
-                <b-button-group>
-                  <b-button variant="primary" class="btn-sm" @click="handleEditModal(row.item, 'operativos', true)">Editar</b-button>
-                  <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                </b-button-group>
-              </template>
-            </b-table>
-          </b-tab>
-          <b-tab title="Tronadura de Producción">
-            <b-table :items="datos_tronadura_produccion" :fields="fields" responsive small hover no-border-collapse striped>
-              <template #cell(actions)="row">
-                <b-button-group>
-                  <b-button variant="primary" class="btn-sm" @click="handleEditModal(row.item, 'tronadura_produccion', true)">Editar</b-button>
-                  <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                </b-button-group>
-              </template>
-            </b-table>
-          </b-tab>
-        </b-tabs>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Días por mes</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.dias_por_mes" locale="es" :precision="0" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Turnos por día</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.turnos_por_dia" locale="es" :precision="0" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Fecha de Inicio</label>
+                  <VueDatePicker v-model="datos_mina.fecha_inicio" class="form-control" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Avance Tronadura</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.avance_tronadura" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Toneladas incorporadas en Tronadura</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.toneladas_incorporadas_tronadura" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Ritmo Extracción</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.ritmo_extraccion" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Mineral Recuperado Módulo</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.mineral_recuperado_modulo" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Mineral Recuperado Pilares</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.mineral_recuperado_pilares" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Densidad Estéril</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.densidad_esteril" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Densidad Mineral</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.densidad_mineral" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Densidad Dilusión</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.densidad_dilusion" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Ley Estéril</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.ley_esteril" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Ley Mineral</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.ley_mineral" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Ley Dilusión</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.ley_diluida" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Tiros por Metro Cuadrado</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.tiros_por_m2" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+              <ValidationProvider rules="required" v-slot="v">
+                <div class="form-group">
+                  <label :class="{'text-danger': v.failedRules.required}">Profundidad de Tiro</label>
+                  <currency-input class="form-control" :currency="null" v-model="datos_mina.profundidad_tiro" locale="es" :precision="2" :disabled="!editMode"/>
+                </div>
+              </ValidationProvider>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-12 text-right pt-4">
+              <b-button variant="success" v-if="editMode" class="" @click="validateEdit()" :disabled="invalid">Subir Cambios</b-button>
+            </div>
+          </div>
+        </ValidationObserver>
       </div>
     </div>
-    <edit-modal :showModal="showEditModal" v-if="showEditModal" :info="itemSelected" @close="handleEditModal(null, false)"/>
-    <new-modal :showModal="showNewModal" v-if="showNewModal" @close="handleNewModal(false)"/>
   </div>
 </template>
 <script>
-import EditModal from './EditModal.vue'
-import NewModal from './NewModal.vue'
 export default {
   name: 'DatosMina',
   components: {
-    EditModal,
-    NewModal
   },
   data () {
     return {
-      fields: [
-        {key: 'tipo', label: "Tipo de indicador"},
-        {key: 'cantidad', label: "Cantidad"},
-        {key: 'unidad_medida', label: "Unidad Medida"},
-        {key: 'actions', label: 'Acciones'}
-      ],
-      datos: [
-        {tipo: 'Densidad esteril', cantidad: 12.3, unidad_medida: 'MT'}
-      ],
-      itemSelected: null,
-      datos_recuperados: [],
-      datos_perforacion: [],
-      datos_tronadura: [],
-      datos_operativos: [],
-      datos_tronadura_produccion: [],
-      showEditModal: false,
-      showNewModal: false,
+      datos_mina: {
+        'periodo_por_ano': 6,
+        'meses_por_periodo': 2,
+        'dias_por_mes': 30,
+        'turnos_por_dia': 2,
+        'fecha_inicio': '2020-01-01',
+        'avance_tronadura': 1.1,
+        'toneladas_incorporadas_tronadura': 1.2,
+        'ritmo_extraccion': 1.3,
+        'mineral_recuperado_modulo': 1.4,
+        'mineral_recuperado_pilares': 1.5,
+        'densidad_esteril': 1.2,
+        'densidad_mineral': 0.1,
+        'densidad_dilusion': 0.3,
+        'ley_esteril': 2,
+        'ley_mineral': 4,
+        'ley_diluida': 7,
+        'tiros_por_m2': 5,
+        'profundidad_tiro': 5
+      },
+      editMode: false,
+      respaldo_datos_mina: null
     }
   },
   created () {
 
   },
   methods: {
-    handleEditModal: function (item ,tipo, cond) {
-      if(cond) {
-        this.itemSelected = JSON.parse(JSON.stringify(item))
-        this.itemSelected.tipo_dato = tipo
-      } else {
-        this.itemSelected = null
+    handleEdit: function (cond) {
+      if(!cond) {
+        this.datos_mina = JSON.parse(JSON.stringify(this.respaldo_datos_mina))
+      } else {      
+        this.respaldo_datos_mina = JSON.parse(JSON.stringify(this.datos_mina))
       }
-      this.showEditModal = cond
+      this.editMode = cond
     },
-    handleNewModal: function (cond) {
-      this.showNewModal = cond
+    validateEdit: function () {
+      this.$swal({
+        title: '¿Seguro?',
+        icon: 'question',
+        text: '¿Estás seguro de realizar los cambios?',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Subir Cambio',
+        confirmButtonColor: '#ffc107'
+      }).then((result) => {
+        if(result.value) {
+          console.log("confirma")
+          this.submitEdit()
+        } else {
+          console.log('rechaza')
+        }
+      })
     },
-    deleteDato: function (item) {
-      //axios para eliminar
+    submitEdit: function () {
+      this.$store.commit('setLoading', true)
+      console.log("subir info nueva")
+      this.$store.commit('setLoading', false)
     }
   }
 }

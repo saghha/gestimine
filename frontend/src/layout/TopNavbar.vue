@@ -55,7 +55,7 @@
             <a class="dropdown-item" href="#">Separated link</a>
           </base-dropdown>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" @click="logout()">
               Log out
             </a>
           </li>
@@ -92,6 +92,12 @@
       },
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
+      },
+      logout () {
+        console.log("hizo logout")
+        this.$store.dispatch('logout').then(() => {
+          this.$router.push('/auth/login')
+        })
       }
     }
   }

@@ -34,6 +34,9 @@ const routes = [
         path: 'login',
         name: 'Login',
         component: Login,
+        meta: {
+          requiresAuth: false
+        }
       }
     ]
   },
@@ -45,52 +48,82 @@ const routes = [
       {
         path: 'test',
         name: 'Test',
-        component: Test
+        component: Test,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'datos_mina',
         name: 'DatosMina',
-        component: DatosMina
+        component: DatosMina,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'cronograma',
         name: 'Cronograma',
-        component: Cronograma
+        component: Cronograma,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'overview',
         name: 'Overview',
-        component: Overview
+        component: Overview,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'user',
         name: 'User',
-        component: UserProfile
+        component: UserProfile,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'table-list',
         name: 'Table List',
-        component: TableList
+        component: TableList,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'typography',
         name: 'Typography',
-        component: Typography
+        component: Typography,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'icons',
         name: 'Icons',
-        component: Icons
+        component: Icons,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'maps',
         name: 'Maps',
-        component: Maps
+        component: Maps,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'notifications',
         name: 'Notifications',
-        component: Notifications
+        component: Notifications,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'upgrade',

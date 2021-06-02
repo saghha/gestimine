@@ -37,22 +37,16 @@ const actions = {
     authenticate({ commit, state }) {
         return new Promise((resolve, reject) => {
             if(state.token == null && state.user == null){
-                if(localStorage.getItem('token')){
+                console.log("token: "+!!localStorage.getItem('token'))
+                if(!!localStorage.getItem('token')){
                     var data = JSON.parse(localStorage.getItem('user'))
                     commit('setUser', data)
                     commit('setLogin', true)
-                    // var sideBar = JSON.parse(localStorage.getItem('sideBar'))
-                    // if(!!sideBar) {
-                    //     commit('setSideBar', sideBar)
-                    // }
-                    // var profile = JSON.parse(localStorage.getItem('profile'))
-                    // if(!!profile) {
-                    //     commit('setProfile', profile)
-                    // }
                     console.log("obtengo los datos desde el localstore")
                     resolve()
                 } else {
-                    reject()
+                    console.log("reject")
+                    reject(false)
                 }
             } else {
                 console.log("los tengo en mi store")
@@ -74,8 +68,6 @@ const actions = {
             console.log("eliminando localStore")
             localStorage.removeItem('token')
             localStorage.removeItem('user')
-            localStorage.removeItem('sideBar')
-            localStorage.removeItem('profile')
             console.log('eliminando vuex')
             commit('setLogout')
             commit('setLogin', false)

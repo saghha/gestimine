@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
 use Hash;
+use RuntimeException;
 
 class AuthController extends Controller
 {
@@ -75,8 +76,9 @@ class AuthController extends Controller
     protected function sendLoginResponse(Request $request)
     {
         $user = User::where('rut', $request->rut)->first();
+        if(!$user) throw new RuntimeException('Error in Login');
         if (!Hash::check($request->password, $user->password, [])) {
-            throw new \Exception('Error in Login');
+            throw new RuntimeException('Error in Login');
         }
         $tokenResult = $user->createToken('authToken')->plainTextToken;
         return response()->json([
