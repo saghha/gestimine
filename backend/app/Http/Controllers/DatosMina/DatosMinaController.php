@@ -146,7 +146,7 @@ class DatosMinaController extends Controller
      */
     public function periodo(ShowDatosMina $request){
         $mina = $this->repository->queryAll()->where('id_usuario', $request->user()->id)->whereNull('deleted_at')->latest()->first();
-        switch ($mina->meses_por_periodo) {
+        switch ($mina->periodos_por_ano) {
             case 1:
                 $periodo = "MES";
                 break;

@@ -95,4 +95,12 @@ Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
         Route::post('reiniciar-tarea-activa', 'TareasTronaduraInfraestructuraPeriodoController@reiniciar_tarea_activa');
     });
     Route::apiResource('tareas-tronadura-inf', 'TareasTronaduraInfraestructuraPeriodoController');
+    Route::group(['prefix' => 'carguio-infraestructura'], function(){
+        Route::get('buscar', 'CarguioInfraestructuraPeriodoController@buscar');
+    });
+    Route::apiResource('carguio-infraestructura', 'CarguioInfraestructuraPeriodoController');
+    Route::group(['prefix' => 'tareas-carguio-inf'], function(){
+        
+    });
+    Route::apiResource('tareas-carguio-inf', 'TareasCarguioInfraestructuraPeriodoController');
 });
