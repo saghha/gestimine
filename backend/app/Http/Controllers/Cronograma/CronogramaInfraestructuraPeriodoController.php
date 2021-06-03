@@ -486,8 +486,10 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 get()->load('valores');
 
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_plan = [];
         $total_desgloce = 0;
+        $anos_infra = [];
+        $mas = 0;
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
@@ -504,22 +506,36 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
+                    if($ano > $mas){
+                        array_push($anos_infra, [
+                            'key' => $ano,
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_infra);
+                    }
                 }
             }
-            $data_plan->put($value->id,[
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_periodo' => $data_values->sum('valor_desgloce_anual'),
-                'valores' => $data_values,
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
 
-        return $data_plan;
+        return [
+            'infraestructura' => $data_plan,
+            'anos_infraestructura' => $anos_infra,
+            'preparacion' => [],
+            'anos_preparaciones' => [],
+            'produccion' => [],
+            'anos_produccion' => []
+        ];
     }
 
     /**
@@ -537,6 +553,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $data_values = collect([]);
         $data_plan = collect([]);
         $total_desgloce = 0;
+        $anos_infra = [];
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
@@ -553,6 +570,10 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
                     ]);
+                    array_push($anos_infra, [
+                        'key' => $ano,
+                        'label' => 'Año '.$ano,
+                    ]);
                 }
             }
             $data_plan->put($value->id,[
@@ -563,6 +584,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_anual' => $data_values->sum('valor_desgloce_anual'),
                 'valores' => $data_values,
+                'anos_infraestructura' => $anos_infra
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
@@ -676,4 +698,49 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return $data_plan;
     }
+
+    /**
+     * Search InfraestructuraPeriodo and add all values year
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    /*
+    public function anos_infraestructura (ShowInfraestructuraPeriodo $request) {
+        $datos_mina = DatosMina::findBySlug($request->datos_mina);
+        $data = $this->repository->queryAll()->
+                where('id_datos_mina', $datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+            foreach($data as $value) {
+                foreach($value->valores as $value_2) {
+                    if($data_values->has($value_2->ano)) {
+                        $ano = $data_values[$value_2->ano]['ano'];
+                        $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($valor_desgloce_t/$avance_tronadura);
+                        $data_values->put($ano, [
+                            'ano' => $ano,
+                            'valor_desgloce_anual' => $valor_desgloce_t,
+                        ]);
+                    } else {
+                        $ano = $value_2->ano;
+                        $valor_desgloce_t = $value_2->valor_desgloce;
+                        $data_values->put($ano, [
+                            'ano' => $ano,
+                            'valor_desgloce_anual' => ($valor_desgloce_t/$avance_tronadura),
+                        ]);
+                    }
+                }
+                $data_plan->put($value->id,[
+                    'nombre' => $value->nombre_infraestructura,
+                    'seccion' => $value->seccion,
+                    'area' => $value->area,
+                    'longitud' => $value->longitud,
+                    'nro_tiros' => $value->nro_tiros,
+                    'total_desgloce_anual' => $data_values->sum('valor_desgloce_anual'),
+                    'valores' => $data_values,
+                ]);
+                    
+            }
+    }
+    */
 }
