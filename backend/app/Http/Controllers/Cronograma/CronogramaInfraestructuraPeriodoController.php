@@ -170,7 +170,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         return $this->repository->queryAll()->
                 where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
-                get()->load('valores');
+                get()->load(['valores','perforaciones','tronaduras','carguios']);
     }
 
     /**
