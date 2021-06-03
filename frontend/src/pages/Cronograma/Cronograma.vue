@@ -25,6 +25,7 @@
 </template>
 <script>
 import NewItemCronograma from './New'
+import helpers from '../../components/Helper'
 export default {
   name: 'Cronograma',
   components: {
@@ -40,13 +41,7 @@ export default {
         {total: 2330003}
       ],
       headers: '',
-      encabezados: [
-        {key: 'info_general', label: 'Información General'},
-        {key: 'ano1', label: 'Año 2019', total: 2},
-        {key: 'ano2', label: 'Año 2020', total: 2},
-        {key: 'ano3', label: 'Año 2021', total: 2},
-        {key: 'total', label: 'Total'},
-      ],
+      cronograma: [],
       fields: [
         {key: 'nombre_estructura', label: 'Nombre Estructura'},
         {key: 'area', label: 'Area'},
@@ -54,20 +49,49 @@ export default {
         {key: 'densidad', label: 'Densidad'},
         {key: 'metros_totales', label: 'Metros Totales'},
         {key: 'ano1', label: 'Año 1'},
-        {key: 'ano2', label: 'Año 2'},
-        {key: 'ano3', label: 'Año 3'},
-        {key: 'ano4', label: 'Año 4'},
-        {key: 'ano5', label: 'Año 5'},
-        {key: 'ano6', label: 'Año 6'},
         {key: 'total', label: 'Total'},
         {key: 'options', label: 'Opciones'},
       ]
     }
   },
   created () {
-
+    this.$nextTick(function () {
+      this.getCronograma()
+    })
   },
   methods: {
+    ...helpers,
+    getCronograma: function () {
+      this.$store.commit('setLoading', true)
+      axios.get('cronograma/infraestructura/buscar-cronograma', {
+        params: {
+          datos_mina: this.$store.getters.slugDatosMina
+        }
+      }).then((response) => {
+        this.cronograma = response.data
+        var anios_infra = [
+          {key: 'ano1', label: 'Año 1'},
+          {key: 'ano2', label: 'Año 2'},
+          {key: 'ano3', label: 'Año 3'},
+          {key: 'ano4', label: 'Año 4'},
+        ]
+        this.fields = [
+          {key: 'nombre_estructura', label: 'Nombre Estructura'},
+          {key: 'area', label: 'Area'},
+          {key: 'ley', label: '% Ley'},
+          {key: 'densidad', label: 'Densidad'},
+          {key: 'metros_totales', label: 'Metros Totales'},
+        ]
+        //this.fields.push(anios_infra)
+        this.fields = _.concat(this.fields, anios_infra)
+        this.fields = _.concat(this.fields, [{key: 'total', label: 'Total'},
+        {key: 'options', label: 'Opciones'}])
+      }).catch((err) => {
+        this.showToast({icon: 'error', title: 'err.response.data.message'})
+      }).finally(() => {
+        this.$store.commit('setLoading', false)
+      })
+    },
     handleNewModal: function (cond) {
       this.showNewItemModal = cond
     }

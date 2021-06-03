@@ -50,7 +50,7 @@
               <ValidationProvider rules="required" v-slot="v">
                 <div class="form-group">
                   <label :class="{'text-danger': v.failedRules.required}">Fecha de Inicio</label>
-                  <VueDatePicker v-model="datos_mina.fecha_inicio" class="form-control" :disabled="!editMode"/>
+                  <VueDatePicker v-model="fecha_inicio" class="form-control" :disabled="!editMode"/>
                 </div>
               </ValidationProvider>
             </div>
@@ -169,6 +169,7 @@
 </template>
 <script>
 import helpers from '../../components/Helper'
+import moment from 'moment'
 export default {
   name: 'DatosMina',
   components: {
@@ -195,6 +196,7 @@ export default {
         'tiros_por_m2': 5,
         'profundidad_tiro': 5
       },
+      fecha_inicio: null,
       editMode: false,
       respaldo_datos_mina: null
     }
@@ -217,6 +219,7 @@ export default {
     getDatosMina: function () {
       return axios.get('datos-mina/ultimo').then((response) => {
         this.datos_mina = response.data
+        this.fecha_inicio = response.data.fecha_inicio
       }).catch((err) => {
         this.showToast({icon: 'error', title: err.response.data.message})
       })
@@ -249,8 +252,15 @@ export default {
     },
     submitEdit: function () {
       this.$store.commit('setLoading', true)
-      console.log("subir info nueva")
-      this.$store.commit('setLoading', false)
+      this.datos_mina.fecha_inicio = moment(this.fecha_inicio).format('DD/MM/YYYY').toString()
+      axios.put('datos-mina/informacion/'+this.datos_mina.slug, this.datos_mina).then((response) => {
+        this.showToast({icon: 'success', title: response.data.message})
+        this.respaldo_datos_mina = JSON.parse(JSON.stringify(this.datos_mina))
+      }).catch((err) => {
+        this.showToast({icon: 'error', title: err.response.data.message})
+      }).finally(() => {
+        this.$store.commit('setLoading', false)
+      })
     }
   }
 }

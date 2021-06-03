@@ -5,7 +5,8 @@ const state = {
     token: null,
     logged: false,
     sideBar: [],
-    profile: null
+    profile: null,
+    slug_datos_mina: null
 }
 
 const mutations = {
@@ -30,6 +31,9 @@ const mutations = {
     },
     setProfile(state, profile) {
         state.profile = profile
+    },
+    setDatosMina(state, slug) {
+        state.slug_datos_mina = slug
     }
 }
 
@@ -42,6 +46,21 @@ const actions = {
                     var data = JSON.parse(localStorage.getItem('user'))
                     commit('setUser', data)
                     commit('setLogin', true)
+                    if(!!window.localStorage.getItem('slugDatosMina')) {
+                        var slug = window.localStorage.getItem('slugDatosMina')
+                        commit('setDatosMina', slug)
+                    } else {
+                        Axios.get('datos-mina/ultimo', {
+                            headers: {
+                                'Authorization': 'Bearer ' + state.token
+                            }
+                        }).then((response) => {
+                            window.localStorage.setItem('slugDatosMina', response.data.slug)
+                            commit('setDatosMina', response.data.slug)
+                        }).catch((err) => {
+                            console.log(err)
+                        })
+                    }
                     console.log("obtengo los datos desde el localstore")
                     resolve()
                 } else {
@@ -66,13 +85,19 @@ const actions = {
     logout({ commit }) {
         return new Promise((resolve, reject) => {
             console.log("eliminando localStore")
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
+            window.localStorage.removeItem('token')
+            window.localStorage.removeItem('user')
+            window.localStorage.removeItem('slugDatosMina')
             console.log('eliminando vuex')
             commit('setLogout')
             commit('setLogin', false)
+            commit('setDatosMina', false)
             resolve()
         })
+    },
+    changeDatosMina({commit}, slug) {
+        commit('setDatosMina', slug)
+        window.localStorage.setItem('slugDatosMina', slug)
     }
 }
 
