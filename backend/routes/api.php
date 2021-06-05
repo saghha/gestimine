@@ -28,7 +28,7 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'datos-mina', 'names
     Route::get('periodo', 'DatosMinaController@periodo');
     Route::apiResource('informacion', 'DatosMinaController');
 });
-Route::group(['prefix' => 'cronograma', 'namespace' => 'Cronograma'], function(){
+Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'cronograma', 'namespace' => 'Cronograma'], function(){
     Route::group(['prefix' => 'infraestructura'], function(){
         Route::get('buscar-cronograma', 'CronogramaInfraestructuraPeriodoController@buscar_cronograma');
         Route::get('sumar-cronograma-ano', 'CronogramaInfraestructuraPeriodoController@sumar_cronograma_anual');
@@ -102,5 +102,5 @@ Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
     Route::group(['prefix' => 'tareas-carguio-inf'], function(){
         
     });
-    Route::apiResource('tareas-carguio-inf', 'TareasCarguioInfraestructuraPeriodoController');
+    //Route::apiResource('tareas-carguio-inf', 'TareasCarguioInfraestructuraPeriodoController');
 });

@@ -5,19 +5,66 @@
     </div>
     <div class="card mt-2">
       <div class="card-body">
-        <h4 class="card-title">Cronograma</h4>
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <b-table :items="datos" :fields="fields" responsive small hover no-border-collapse striped>
-              <template #cell(options)="row">
-                <b-button-group>
-                  <b-button variant="warning" class="btn-sm">Editar</b-button>
-                  <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                </b-button-group>
-              </template>
-            </b-table>
-          </div>
-        </div>
+        <b-tabs>
+          <b-tab title="Infraestructuras" @click="selectTab('infraestructura')">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <b-table-simple hover small caption-top responsive>
+                  <b-thead>
+                    <b-tr>
+                      <b-th v-for="(field, index_field) in fields_infra" :key="index_field">{{field.label}}</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(item, index_item) in infraestructuras" :key="index_item">
+                      <b-td>{{item.nombre}}</b-td>
+                      <b-td>{{item.area}}</b-td>
+                      <b-td>{{item.seccion}}</b-td>
+                      <b-td>{{item.nro_tiros}}</b-td>
+                      <b-td>{{item.longitud}}</b-td>
+                      <b-td class="text-center" v-for="(valor, index_valor) in item.valores" :key="index_valor">{{formatAllMoney(valor.valor_desgloce_anual)}}</b-td>
+                      <b-td>{{formatAllMoney(item.total_desgloce_periodo)}}</b-td>
+                      <b-td>
+                        <b-button-group>
+                          <b-button variant="warning" class="btn-sm">Editar</b-button>
+                          <b-button variant="danger" class="btn-sm">Eliminar</b-button>
+                        </b-button-group>
+                      </b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
+              </div>
+            </div>
+          </b-tab>
+          <b-tab title="Preparación" @click="selectTab('preparación')">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <b-table :items="preparaciones" :fields="fields_prepa" responsive small hover no-border-collapse striped>
+                  <template #cell(options)="row">
+                    <b-button-group>
+                      <b-button variant="warning" class="btn-sm">Editar</b-button>
+                      <b-button variant="danger" class="btn-sm">Eliminar</b-button>
+                    </b-button-group>
+                  </template>
+                </b-table>
+              </div>
+            </div>
+          </b-tab>
+          <b-tab title="Producción" @click="selectTab('producción')">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <b-table :items="produccion" :fields="fields_prod" responsive small hover no-border-collapse striped>
+                  <template #cell(options)="row">
+                    <b-button-group>
+                      <b-button variant="warning" class="btn-sm">Editar</b-button>
+                      <b-button variant="danger" class="btn-sm">Eliminar</b-button>
+                    </b-button-group>
+                  </template>
+                </b-table>
+              </div>
+            </div>
+          </b-tab>
+        </b-tabs>
       </div>
     </div>
     <NewItemCronograma v-if="showNewItemModal" :showModal="showNewItemModal" @close="handleNewModal(false)"/>
@@ -34,15 +81,29 @@ export default {
   data () {
     return {
       datos: [
-        {nombre_estructura: 'nombre', area: 'area', ley: "0.5%", densidad: 132, metros_totales:200, ano1: 220202, ano2: 220202, ano3: 220202, ano4: 220202, ano5: 220202, ano6: 220202, total: 2330003}
+        {"nombre":"OPERACIONEES PRUEBA","seccion":"6X6","area":"36.00","longitud":"200.00","nro_tiros":40,"total_desgloce_periodo":100,"valores":{"2021":{"ano":2021,"valor_desgloce_anual":100}}}
       ],
       showNewItemModal: false,
       datos_final: [
         {total: 2330003}
       ],
       headers: '',
-      cronograma: [],
-      fields: [
+      infraestructuras: [],
+      preparaciones: [],
+      produccion: [],
+      fields_prepa: [
+        {key: 'nombre', label: 'Nombre Estructura'},
+        {key: 'area', label: 'Area'},
+        {key: 'seccion', label: 'Sección'},
+        {key: 'nro_tiros', label: 'N° Tiros'},
+        {key: 'longitud', label: 'Metros Totales'},
+        {key: '2021', label: 'Año 1'},
+        {key: 'total_desgloce', label: 'Total'},
+        {key: 'options', label: 'Opciones'},
+      ],
+      anos_infraestructura: [],
+      tab_selected: 'infraestructura',
+      fields_prod: [
         {key: 'nombre_estructura', label: 'Nombre Estructura'},
         {key: 'area', label: 'Area'},
         {key: 'ley', label: '% Ley'},
@@ -50,6 +111,16 @@ export default {
         {key: 'metros_totales', label: 'Metros Totales'},
         {key: 'ano1', label: 'Año 1'},
         {key: 'total', label: 'Total'},
+        {key: 'options', label: 'Opciones'},
+      ],
+      fields_infra: [
+        {key: 'nombre', label: 'Nombre Estructura'},
+        {key: 'area', label: 'Area'},
+        {key: 'seccion', label: 'Sección'},
+        {key: 'nro_tiros', label: 'N° Tiros'},
+        {key: 'longitud', label: 'Metros Totales'},
+        {key: 'valores.2021.valor_desgloce_anual', label: 'Año 1'},
+        {key: 'total_desgloce', label: 'Total'},
         {key: 'options', label: 'Opciones'},
       ]
     }
@@ -63,19 +134,29 @@ export default {
     ...helpers,
     getCronograma: function () {
       this.$store.commit('setLoading', true)
-      axios.get('cronograma/infraestructura/buscar-cronograma', {
+      axios.get('cronograma/infraestructura/mostrar-cronograma-anual', {
         params: {
           datos_mina: this.$store.getters.slugDatosMina
         }
       }).then((response) => {
-        this.cronograma = response.data
-        var anios_infra = [
-          {key: 'ano1', label: 'Año 1'},
-          {key: 'ano2', label: 'Año 2'},
-          {key: 'ano3', label: 'Año 3'},
-          {key: 'ano4', label: 'Año 4'},
+        this.infraestructuras = response.data.infraestructura
+        this.preparaciones = response.data.preparacion
+        this.produccion = response.data.produccion
+        this.fields_infra = [
+          {key: 'nombre', label: 'Nombre Estructura'},
+          {key: 'area', label: 'Area'},
+          {key: 'seccion', label: 'Sección'},
+          {key: 'nro_tiros', label: 'N° Tiros'},
+          {key: 'longitud', label: 'Metros Totales'},
         ]
-        this.fields = [
+        this.fields_prepa = [
+          {key: 'nombre_estructura', label: 'Nombre Estructura'},
+          {key: 'area', label: 'Area'},
+          {key: 'ley', label: '% Ley'},
+          {key: 'densidad', label: 'Densidad'},
+          {key: 'metros_totales', label: 'Metros Totales'},
+        ]
+        this.fields_prod = [
           {key: 'nombre_estructura', label: 'Nombre Estructura'},
           {key: 'area', label: 'Area'},
           {key: 'ley', label: '% Ley'},
@@ -83,14 +164,24 @@ export default {
           {key: 'metros_totales', label: 'Metros Totales'},
         ]
         //this.fields.push(anios_infra)
-        this.fields = _.concat(this.fields, anios_infra)
-        this.fields = _.concat(this.fields, [{key: 'total', label: 'Total'},
+        this.fields_infra = _.concat(this.fields_infra, response.data.anos_infraestructura)
+        this.fields_infra = _.concat(this.fields_infra, [{key: 'total_desgloce_periodo', label: 'Total'},
+        {key: 'options', label: 'Opciones'}])
+        this.anos_infraestructura = response.data.anos_infraestructura
+        this.fields_prepa = _.concat(this.fields_prepa, response.data.anos_preparaciones)
+        this.fields_prepa = _.concat(this.fields_prepa, [{key: 'total', label: 'Total'},
+        {key: 'options', label: 'Opciones'}])
+        this.fields_prod = _.concat(this.fields_prod, response.data.anos_produccion)
+        this.fields_prod = _.concat(this.fields_prod, [{key: 'total', label: 'Total'},
         {key: 'options', label: 'Opciones'}])
       }).catch((err) => {
-        this.showToast({icon: 'error', title: 'err.response.data.message'})
+        this.showToast({icon: 'error', title: err.response.data.message})
       }).finally(() => {
         this.$store.commit('setLoading', false)
       })
+    },
+    selectTab: function (tab_name) {
+      this.tab_selected = tab_name
     },
     handleNewModal: function (cond) {
       this.showNewItemModal = cond

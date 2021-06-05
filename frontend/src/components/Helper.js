@@ -44,6 +44,9 @@ export default {
             confirmButtonText: 'Ok'
         })
     },
+    formatAllMoney: function (saldo) {
+        return Intl.NumberFormat('de-DE').format(saldo)
+    },
     showInfoAlert (info) {
         this.$swal({
             title: info.title,

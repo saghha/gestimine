@@ -103,7 +103,7 @@ class CronogramaInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_datos_mina' => 'decode_slug:App\Models\DatosMina\DatosMina',
+        'id_datos_mina' => 'decode_slug:App\Models\DatosMina\DatosMina',
         'nombre_infraestructura' => 'trim|escape|uppercase',
         'seccion' => 'trim|escape|uppercase',
         'periodo' => 'digit|cast:integer',

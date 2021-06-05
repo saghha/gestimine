@@ -35,6 +35,7 @@ use App\Http\Requests\Operacion\Carguio\InfraestructuraPeriodo\EditCarguioInfrae
 use App\Http\Requests\Operacion\Carguio\InfraestructuraPeriodo\DeleteCarguioInfraestructuraPeriodo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use \Carbon\Carbon;
 use RuntimeException;
@@ -69,29 +70,36 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $tronadura_repository = new TronaduraInfraestructuraPeriodoRepository(new TronaduraInfraestructuraPeriodo());
         $carguio_repository = new CarguioInfraestructuraPeriodoRepository(new CarguioInfraestructuraPeriodo());
         $data = $request->validated();
-        $model = $this->repository->create(Arr::only($data, $this->repository->attributes()));
-        foreach (Arr::get($data, 'valores', []) as $key => $valor) {
-            $dataValor = array_merge($valor, ['id_infraestructura' => $model->id]);
-            $valores = $valor_repository->create(Arr::only($dataValor, $valor_repository->attributes()));
-            $dataPerforacion = [
-                'id_infraestructura' => $model->id,
-                'periodo' => $valor['periodo'],
-                'ano' => $valor['ano'],
-            ];
-            $dataTronadura = [
-                'id_infraestructura' => $model->id,
-                'periodo' => $valor['periodo'],
-                'ano' => $valor['ano'],
-            ];
-            $dataCarguio = [
-                'id_infraestructura' => $model->id,
-                'periodo' => $valor['periodo'],
-                'ano' => $valor['ano'],
-            ];
-            $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
-            $tronaduras = $tronadura_repository->create(Arr::only($dataTronadura, $tronadura_repository->attributes()));
-            $carguio = $carguio_repository->create(Arr::only($dataCarguio, $carguio_repository->attributes()));
+        DB::beginTransaction();
+        try {
+            $model = $this->repository->create(Arr::only($data, $this->repository->attributes()));
+            foreach (Arr::get($data, 'valores', []) as $key => $valor) {
+                $dataValor = array_merge($valor, ['id_infraestructura' => $model->id]);
+                $valores = $valor_repository->create(Arr::only($dataValor, $valor_repository->attributes()));
+                $dataPerforacion = [
+                    'id_infraestructura' => $model->id,
+                    'periodo' => $valor['periodo'],
+                    'ano' => $valor['ano'],
+                ];
+                $dataTronadura = [
+                    'id_infraestructura' => $model->id,
+                    'periodo' => $valor['periodo'],
+                    'ano' => $valor['ano'],
+                ];
+                $dataCarguio = [
+                    'id_infraestructura' => $model->id,
+                    'periodo' => $valor['periodo'],
+                    'ano' => $valor['ano'],
+                ];
+                $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
+                $tronaduras = $tronadura_repository->create(Arr::only($dataTronadura, $tronadura_repository->attributes()));
+                $carguio = $carguio_repository->create(Arr::only($dataCarguio, $carguio_repository->attributes()));
+            }
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
         }
+        DB::commit();
         return $model->load(['valores','perforaciones','tronaduras','carguios']);
     }
 
@@ -508,7 +516,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     ]);
                     if($ano > $mas){
                         array_push($anos_infra, [
-                            'key' => $ano,
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
                             'label' => 'Año '.$ano,
                         ]);
                         $mas = max($anos_infra);
