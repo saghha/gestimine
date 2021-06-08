@@ -69,7 +69,7 @@ class TareasPerforacionInfraestructuraPeriodoController extends Controller
         if($this->repository->edit(Arr::only($data, $this->repository->attributes()), $slug)) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Los datos de la mina se han actualizado',
+                'message' => 'Los datos de la tarea se han actualizado',
             ]);
         } else {
             return response()->json([

@@ -83,7 +83,7 @@ class TareasCarguioInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_carguio' => 'decode_slug:App\Models\Operacion\CarguioInfraestructuraPeriodo',
+        'id_carguio' => 'decode_slug:App\Models\Operacion\CarguioInfraestructuraPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
         'turno' => 'digit|cast:integer',

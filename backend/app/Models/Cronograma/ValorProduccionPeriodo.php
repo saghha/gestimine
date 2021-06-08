@@ -84,7 +84,7 @@ class ValorProduccionPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_produccion' => 'decode_slug:App\Models\Cronograma\CronogramaProduccionPeriodo',
+        'id_produccion' => 'decode_slug:App\Models\Cronograma\CronogramaProduccionPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
     ];

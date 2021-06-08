@@ -106,7 +106,7 @@ class CronogramaPreparacionPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_datos_mina' => 'decode_slug:App\Models\DatosMina\DatosMina',
+        'id_datos_mina' => 'decode_slug:App\Models\DatosMina\DatosMina',
         'nro_modulo' => 'digit|cast:integer',
         'nombre_infraestructura' => 'trim|escape|uppercase',
         'seccion' => 'trim|escape|uppercase',

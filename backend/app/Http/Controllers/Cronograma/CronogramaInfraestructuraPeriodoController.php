@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Cronograma;
 
 use Illuminate\Http\Request;
+use App\Models\Cronograma\CronogramaPreparacionPeriodo;
+use App\Models\Cronograma\CronogramaProduccionPeriodo;
 use App\Models\Cronograma\ValorInfraestructuraPeriodo;
 use App\Models\Operacion\PerforacionInfraestructuraPeriodo;
 use App\Models\Operacion\TronaduraInfraestructuraPeriodo;
@@ -131,34 +133,59 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $carguio_repository = new CarguioInfraestructuraPeriodoRepository(new CarguioInfraestructuraPeriodo());
         $data = $request->validated();
         $infraestructura = $this->repository->find($slug);
+        $save_perforacion =  $infraestructura->perforaciones()->get();
+        $save_tronaduras =  $infraestructura->tronaduras()->get();
+        $save_carguios =  $infraestructura->carguios()->get();
         if($this->repository->edit(Arr::only($data, $this->repository->attributes()), $slug)) {
-            $infraestructura->valores()->delete();
-            $infraestructura->perforaciones()->delete();
-            $infraestructura->tronaduras()->delete();
-            $infraestructura->carguios()->delete();
-            foreach (Arr::get($data, 'valores', []) as $key => $detalle) {
-                $dataDetalle = array_merge($detalle, ['id_infraestructura' => $infraestructura->id]);
-                $detalles = $valor_repository->create(Arr::only($dataDetalle, $valor_repository->attributes()));
-                $dataPerforacion = [
-                    'id_infraestructura' => $infraestructura->id,
-                    'periodo' => $detalle['periodo'],
-                    'ano' => $detalle['ano'],
-                ];
-                $dataTronadura = [
-                    'id_infraestructura' => $infraestructura->id,
-                    'periodo' => $detalle['periodo'],
-                    'ano' => $detalle['ano'],
-                ];
-                $dataCarguio = [
-                    'id_infraestructura' => $infraestructura->id,
-                    'periodo' => $detalle['periodo'],
-                    'ano' => $detalle['ano'],
-                ];
-                $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
-                $tronaduras = $tronadura_repository->create(Arr::only($dataTronadura, $tronadura_repository->attributes()));
-                $carguio = $carguio_repository->create(Arr::only($dataCarguio, $carguio_repository->attributes()));
+            DB::beginTransaction();
+            try {
+                $infraestructura->valores()->delete();
+                $infraestructura->perforaciones()->delete();
+                $infraestructura->tronaduras()->delete();
+                $infraestructura->carguios()->delete();
+                foreach (Arr::get($data, 'valores', []) as $key => $detalle) {
+                    $dataDetalle = array_merge($detalle, ['id_infraestructura' => $infraestructura->id]);
+                    $detalles = $valor_repository->create(Arr::only($dataDetalle, $valor_repository->attributes()));
+                    $registro_perforacion = $save_perforacion->where('periodo', $detalle['periodo'])->where('ano', $detalle['ano'])->first();
+                    $dataPerforacion = [
+                        'id_infraestructura' => $infraestructura->id,
+                        'periodo' => $detalle['periodo'],
+                        'ano' => $detalle['ano'],
+                        'registro_desgloce' => $registro_perforacion->registro_desgloce,
+                        'valor_perforacion' => $registro_perforacion->valor_perforacion,
+                        'total_perforacion' => $registro_perforacion->total_perforacion,
+                    ];
+                    $registro_tronadura = $save_tronaduras->where('periodo', $detalle['periodo'])->where('ano', $detalle['ano'])->first();
+                    $dataTronadura = [
+                        'id_infraestructura' => $infraestructura->id,
+                        'periodo' => $detalle['periodo'],
+                        'ano' => $detalle['ano'],
+                        'registro_desgloce' => $registro_tronadura->registro_desgloce,
+                        'valor_tronadura' => $registro_tronadura->valor_tronadura,
+                        'total_tronadura' => $registro_tronadura->total_tronadura,
+                    ];
+                    $registro_carguio = $save_carguios->where('periodo', $detalle['periodo'])->where('ano', $detalle['ano'])->first();
+                    $dataCarguio = [
+                        'id_infraestructura' => $infraestructura->id,
+                        'periodo' => $detalle['periodo'],
+                        'ano' => $detalle['ano'],
+                        'registro_desgloce_carguio' => $registro_carguio->registro_desgloce_carguio,
+                        'valor_cargio' => $registro_carguio->valor_carguio,
+                        'total_carguio' => $registro_carguio->total_carguio,
+                        'registro_desgloce_total' => $registro_carguio->registro_desgloce_total,
+                        'valor_total' => $registro_carguio->valor_total,
+                        'total_total' => $registro_carguio->total_total,
+                    ];
+                    $perforaciones = $perforacion_repository->create(Arr::only($dataPerforacion, $perforacion_repository->attributes()));
+                    $tronaduras = $tronadura_repository->create(Arr::only($dataTronadura, $tronadura_repository->attributes()));
+                    $carguio = $carguio_repository->create(Arr::only($dataCarguio, $carguio_repository->attributes()));
+                }
+                $infraestructura->refresh();
+            } catch (\Throwable $th) {
+                DB::rollback();
+                throw $th;
             }
-            $infraestructura->refresh();
+            DB::commit();
             return $infraestructura->load(['valores','perforaciones','tronaduras','carguios']);
         } else {
             return response()->json([
@@ -493,11 +520,26 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 whereNull('deleted_at')->
                 get()->load('valores');
 
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
         $data_values = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
         $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
         $anos_infra = [];
+        $anos_prep = [];
+        $anos_prod = [];
         $mas = 0;
+        //calcula cronograma infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
@@ -536,13 +578,89 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $total_desgloce = 0;
         }
 
+        $mas = 0;
+        //calcula cronograma preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prep->has($value_2->ano)) {
+                    $ano = $data_values_prep[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prep[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce;
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->valor_desgloce;
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prep, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prep);
+                    }
+                }
+            }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_periodo' => $data_values->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+
+        $mas = 0;
+        //calcula cronograma produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prod->has($value_2->ano)) {
+                    $ano = $data_values_prod[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prod[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->valor_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prod, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prod);
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_periodo' => $data_values->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
+
         return [
             'infraestructura' => $data_plan,
             'anos_infraestructura' => $anos_infra,
-            'preparacion' => [],
-            'anos_preparaciones' => [],
-            'produccion' => [],
-            'anos_produccion' => []
+            'preparacion' => $data_plan_prep,
+            'anos_preparaciones' => $anos_prep,
+            'produccion' => $data_plan_prod,
+            'anos_produccion' => $anos_prod
         ];
     }
 

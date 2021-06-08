@@ -72,7 +72,7 @@ class ValorPreparacionPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_preparacion' => 'decode_slug:App\Models\Cronograma\CronogramaPreparacionPeriodo',
+        'id_preparacion' => 'decode_slug:App\Models\Cronograma\CronogramaPreparacionPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
     ];

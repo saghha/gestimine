@@ -83,7 +83,7 @@ class TareasTronaduraInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_tronadura' => 'decode_slug:App\Models\Operacion\TronaduraInfraestructuraPeriodo',
+        'id_tronadura' => 'decode_slug:App\Models\Operacion\TronaduraInfraestructuraPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
         'turno' => 'digit|cast:integer',

@@ -102,5 +102,5 @@ Route::group(['prefix' => 'operacion', 'namespace' => 'Operacion'], function(){
     Route::group(['prefix' => 'tareas-carguio-inf'], function(){
         
     });
-    //Route::apiResource('tareas-carguio-inf', 'TareasCarguioInfraestructuraPeriodoController');
+    Route::apiResource('tareas-carguio-inf', 'TareasCarguioInfraestructuraPeriodoController');
 });

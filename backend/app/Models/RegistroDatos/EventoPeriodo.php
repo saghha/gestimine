@@ -63,7 +63,7 @@ class EventoPeriodo extends Model
      * @var array
      */
     public static $rules = [
-        //'id_usuario' => 'required|exists:App\Models\User,id',
+        'id_usuario' => 'required|exists:App\Models\User,id',
         'operacion_infraestructura' => 'nullable',
         'periodo' => 'required',
         'ano' => 'required',

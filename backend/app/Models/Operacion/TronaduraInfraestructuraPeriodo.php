@@ -81,7 +81,7 @@ class TronaduraInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_infraestructura' => 'decode_slug:App\Models\Cronograma\CronogramaInfraestructuraPeriodo',
+        'id_infraestructura' => 'decode_slug:App\Models\Cronograma\CronogramaInfraestructuraPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
     ];

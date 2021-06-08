@@ -83,7 +83,7 @@ class TareasPerforacionInfraestructuraPeriodo extends Model
      * @var array
      */
     public static $filters = [
-        //'id_perforacion' => 'decode_slug:App\Models\Operacion\PerforacionInfraestructuraPeriodo',
+        'id_perforacion' => 'decode_slug:App\Models\Operacion\PerforacionInfraestructuraPeriodo',
         'periodo' => 'digit|cast:integer',
         'ano' => 'digit|cast:integer',
         'turno' => 'digit|cast:integer',
