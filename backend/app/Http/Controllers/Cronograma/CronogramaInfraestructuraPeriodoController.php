@@ -876,6 +876,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $anos_prep = [];
         $anos_prod = [];
         $mas = 0;
+        $array_ano = [];
         //calcula cronograma infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
@@ -898,7 +899,8 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'key' => 'valores.'.$ano.'.valor_desgloce_anual',
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_infra);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
@@ -911,17 +913,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values->sum('valor_desgloce_anual'),
                 'valores' => $data_values->toArray(),
-                'densidad_esteril' => $value->densidad_esteril,
-                'ley_diluida' => $value->ley_diluida,
-                'ley_mineral' => $value->ley_mineral,
-                'ley_esteril' => $value->ley_esteril,
-                'densidad_dilucion' => $value->densidad_dilucion,
-                'densidad_mineral' => $value->densidad_mineral,
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
-
+        $array_ano = [];
         $mas = 0;
         //calcula cronograma preparacion
         foreach($data_preparacion as $value) {
@@ -945,11 +941,13 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'key' => 'valores.'.$ano.'.valor_desgloce_anual',
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_prep);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan_prep,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
@@ -961,7 +959,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $data_values_prep = collect([]);
             $total_desgloce = 0;
         }
-
+        $array_ano = [];
         $mas = 0;
         //calcula cronograma produccion
         foreach($data_produccion as $value) {
@@ -985,11 +983,13 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'key' => 'valores.'.$ano.'.valor_desgloce_anual',
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_prod);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan_prod,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_produccion,
                 'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
                 'valores' => $data_values_prod->toArray(),
