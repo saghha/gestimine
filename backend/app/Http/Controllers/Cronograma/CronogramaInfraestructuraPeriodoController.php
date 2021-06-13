@@ -894,7 +894,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
-                    if(!in_array($ano, $anos_infra)){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_infra, [
                             'key' => $ano,
                             'label' => 'Año '.$ano,
@@ -936,7 +936,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
-                    if(!in_array($ano, $anos_prep)){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_prep, [
                             'key' => $ano,
                             'label' => 'Año '.$ano,
@@ -978,7 +978,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
-                    if(!in_array($ano, $anos_prod)){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_prod, [
                             'key' => $ano,
                             'label' => 'Año '.$ano,
