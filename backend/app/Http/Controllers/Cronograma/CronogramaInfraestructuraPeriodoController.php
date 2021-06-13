@@ -63,6 +63,16 @@ class CronogramaInfraestructuraPeriodoController extends Controller
     }
 
     /**
+     * get a ShowCronogramaInfraestructuraPeriodo
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function show(ShowInfraestructuraPeriodo $request, $slug){
+        $data = $this->repository->find($slug);
+        return $data->load('valores');
+    }
+
+    /**
      * create InfraestructuraPeriodo
      * @return InfraestructuraPeriodo
      */

@@ -156,6 +156,9 @@ export default {
     }
   },
   created () {
+    this.$nextTick(function () {
+      this.getDato()
+    })
   },
   methods: {
     ...helpers,
@@ -203,10 +206,10 @@ export default {
     addItem: function () {
       this.$store.commit('setLoading', true)
       this.info.id_datos_mina = this.id_datos_mina
-      axios.post('cronograma/infraestructura', this.info).then((response) => {
+      axios.put('cronograma/infraestructura/'+this.id_dato, this.info).then((response) => {
         this.closeModal()
-        this.showToast({icon: 'success', title: 'Item agregado correctamente'})
-        this.$emit('add');
+        this.showToast({icon: 'success', title: 'Item editado correctamente'})
+        this.$emit('edit');
       }).catch((err) => {
         this.showToast({icon:'error', title: err.response.data.message})
         this.$store.commit('setLoading', false)

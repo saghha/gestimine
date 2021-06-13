@@ -76,7 +76,7 @@
       :id_dato="selectedEdit.slug"
       :id_datos_mina="this.$store.getters.slugDatosMina"
       @close="handleEditModal(false)"
-      @add="getCronograma()"/>
+      @edit="getCronograma()"/>
   </div>
 </template>
 <script>
