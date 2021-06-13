@@ -893,6 +893,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 }
             }
             array_push($data_plan,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
