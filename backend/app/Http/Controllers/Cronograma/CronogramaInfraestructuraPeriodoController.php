@@ -893,6 +893,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 }
             }
             array_push($data_plan,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
@@ -900,6 +901,12 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values->sum('valor_desgloce_anual'),
                 'valores' => $data_values->toArray(),
+                'densidad_esteril' => $value->densidad_esteril,
+                'ley_diluida' => $value->ley_diluida,
+                'ley_mineral' => $value->ley_mineral,
+                'ley_esteril' => $value->ley_esteril,
+                'densidad_dilucion' => $value->densidad_dilucion,
+                'densidad_mineral' => $value->densidad_mineral,
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
