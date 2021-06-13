@@ -14,7 +14,14 @@
                 <b-table-simple hover small caption-top responsive>
                   <b-thead>
                     <b-tr>
-                      <b-th v-for="(field, index_field) in fields_infra" :key="index_field">{{field.label}}</b-th>
+                      <b-th sticky-column>Nombre Infraestructura</b-th>
+                      <b-th sticky-column>Área</b-th>
+                      <b-th sticky-column>Sección</b-th>
+                      <b-th sticky-column>N° Tiros</b-th>
+                      <b-th sticky-column>Metros Totales</b-th>
+                      <b-th v-for="(anio, index_field) in anos_infraestructura" :key="index_field">{{anio.label}}</b-th>
+                      <b-th>Total</b-th>
+                      <b-th>Opciones</b-th>
                     </b-tr>
                   </b-thead>
                   <b-tbody>
@@ -24,7 +31,7 @@
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
                       <b-td>{{item.longitud}}</b-td>
-                      <b-td class="text-center" v-for="(valor, index_valor) in item.valores" :key="index_valor">{{formatAllMoney(valor.valor_desgloce_anual)}}</b-td>
+                      <b-td class="text-center" v-for="(value_ano, index_ano) in anos_infraestructura" :key="index_ano">{{mostrarValor(value_ano, item)}}</b-td>
                       <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
                       <b-td>
                         <b-button-group>
@@ -202,6 +209,14 @@ export default {
       }
       if(tab == 'infraestructura') {
         this.editInfraItemModal = cond
+      }
+    },
+    mostrarValor: function (value_ano, item) {
+      var data = _.find(item.valores, (value, index) => {return value_ano.key == index})
+      if(!!data) {
+        return this.formatAllMoney(data.valor_desgloce_anual)
+      } else {
+        return 0
       }
     },
     selectItem: function (item) {
