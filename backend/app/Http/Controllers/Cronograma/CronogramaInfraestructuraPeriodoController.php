@@ -902,7 +902,6 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         array_push($array_ano, $ano);
                         $mas = max($array_ano);
                     }
-                    //return in_array($ano, $anos_infra);
                 }
             }
             array_push($data_plan,[
@@ -913,7 +912,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values->sum('valor_desgloce_anual'),
-                'valores' => $data_values->toArray(),
+                'valores' => $data_values->sortBy('ano')->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
@@ -955,7 +954,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_anual'),
-                'valores' => $data_values_prep->toArray(),
+                'valores' => $data_values_prep->sortBy('ano')->toArray(),
             ]);
             $data_values_prep = collect([]);
             $total_desgloce = 0;
@@ -993,7 +992,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'slug' => $value->slug,
                 'nombre' => $value->nombre_produccion,
                 'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
-                'valores' => $data_values_prod->toArray(),
+                'valores' => $data_values_prod->sortBy('ano')->toArray(),
             ]);
             $data_values_prod = collect([]);
             $total_desgloce = 0;
@@ -1001,11 +1000,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => $anos_infra,
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => $anos_prep,
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => $anos_prod
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
         ];
     }
 
