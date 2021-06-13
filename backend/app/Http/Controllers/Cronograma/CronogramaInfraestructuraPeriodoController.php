@@ -296,11 +296,28 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 whereNull('deleted_at')->
                 get()->load('valores');
 
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
         $ano = $request->ano;
 
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
+        $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
+        $periodo_infra = [];
+        $periodo_prep = [];
+        $periodo_prod = [];
+        $mas = 0;
+        //calcula cronograma infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($value_2->ano == $ano) {
@@ -318,25 +335,117 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'periodo' => $periodo,
                             'valor_desgloce_periodo' => $valor_desgloce_t,
                         ]);
+                        if($periodo > $mas){
+                            array_push($periodo_infra, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_infra);
+                        }
                     }
-                    $total_desgloce += $valor_desgloce_t;
                 }
             }
-            $data_plan->put($value->id,[
-                'ano' => $ano,
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
-                'densidad_esteril' => $value->densidad_esteril,
-                'total_desgloce_periodo' => $total_desgloce,
-                'valores' => $data_values,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_total' => $data_values->sum('valor_desgloce_periodo'),
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
 
-        return $data_plan;
+        $mas = 0;
+        //calcula cronograma preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($value_2->ano == $ano) {
+                    if($data_values_prep->has($value_2->periodo)) {
+                        $periodo = $data_values_prep[$value_2->periodo]['periodo'];
+                        $valor_desgloce_t = $data_values_prep[$value_2->periodo]['valor_desgloce_periodo'] + $value_2->valor_desgloce;
+                        $data_values_prep->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                    } else {
+                        $periodo = $value_2->periodo;
+                        $valor_desgloce_t = $value_2->valor_desgloce;
+                        $data_values_prep->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                        if($periodo > $mas){
+                            array_push($periodo_prep, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_prep);
+                        }
+                    }
+                }
+            }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_periodo'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+
+        $mas = 0;
+        //calcula cronograma produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($value_2->ano == $ano) {
+                    if($data_values_prod->has($value_2->periodo)) {
+                        $periodo = $data_values_prod[$value_2->periodo]['periodo'];
+                        $valor_desgloce_t = $data_values_prod[$value_2->periodo]['valor_desgloce_periodo'] + $value_2->valor_desgloce;
+                        $data_values_prod->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                    } else {
+                        $periodo = $value_2->periodo;
+                        $valor_desgloce_t = $value_2->valor_desgloce;
+                        $data_values_prod->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                        if($periodo > $mas){
+                            array_push($periodo_prod, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_prod);
+                        }
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
+
+        return [
+            'infraestructura' => $data_plan,
+            'periodo_infraestructura' => $periodo_infra,
+            'preparacion' => $data_plan_prep,
+            'periodo_preparaciones' => $periodo_prep,
+            'produccion' => $data_plan_prod,
+            'periodo_produccion' => $periodo_prod
+        ];
     }
 
     /**
@@ -351,11 +460,28 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 whereNull('deleted_at')->
                 get()->load('valores');
 
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
         $ano = $request->ano;
 
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
+        $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
+        $periodo_infra = [];
+        $periodo_prep = [];
+        $periodo_prod = [];
+        $mas = 0;
+        //calcula plan mina infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($value_2->ano == $ano) {
@@ -368,30 +494,122 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         ]);
                     } else {
                         $periodo = $value_2->periodo;
-                        $valor_desgloce_t = $value_2->valor_desgloce;
+                        $valor_desgloce_t = $value_2->valor_desgloce*($value->area*$value->densidad_esteril);
                         $data_values->put($periodo, [
                             'periodo' => $periodo,
-                            'valor_desgloce_periodo' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
                         ]);
+                        if($periodo > $mas){
+                            array_push($periodo_infra, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_infra);
+                        }
                     }
-                    $total_desgloce += $valor_desgloce_t*($value->area*$value->densidad_esteril);
                 }
             }
-            $data_plan->put($value->id,[
-                'ano' => $ano,
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
-                'densidad_esteril' => $value->densidad_esteril,
-                'total_desgloce_periodo' => $total_desgloce,
-                'valores' => $data_values,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_total' => $data_values->sum('valor_desgloce_periodo'),
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
 
-        return $data_plan;
+        $mas = 0;
+        //calcula plan mina preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($value_2->ano == $ano) {
+                    if($data_values_prep->has($value_2->periodo)) {
+                        $periodo = $data_values_prep[$value_2->periodo]['periodo'];
+                        $valor_desgloce_t = $data_values_prep[$value_2->periodo]['valor_desgloce_periodo'] + $value_2->valor_desgloce*($value->area*$value->densidad_esteril);
+                        $data_values_prep->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                    } else {
+                        $periodo = $value_2->periodo;
+                        $valor_desgloce_t = $value_2->valor_desgloce*($value->area*$value->densidad_esteril);
+                        $data_values_prep->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                        if($periodo > $mas){
+                            array_push($periodo_prep, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_prep);
+                        }
+                    }
+                }
+            }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_periodo'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+
+        $mas = 0;
+        //calcula plan mina produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($value_2->ano == $ano) {
+                    if($data_values_prod->has($value_2->periodo)) {
+                        $periodo = $data_values_prod[$value_2->periodo]['periodo'];
+                        $valor_desgloce_t = $data_values_prod[$value_2->periodo]['valor_desgloce_periodo'] + $value_2->valor_desgloce*($value->area*$value->densidad_esteril);
+                        $data_values_prod->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                    } else {
+                        $periodo = $value_2->periodo;
+                        $valor_desgloce_t = $value_2->valor_desgloce*($value->area*$value->densidad_esteril);
+                        $data_values_prod->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                        ]);
+                        if($periodo > $mas){
+                            array_push($periodo_prod, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_prod);
+                        }
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
+
+        return [
+            'infraestructura' => $data_plan,
+            'periodo_infraestructura' => $periodo_infra,
+            'preparacion' => $data_plan_prep,
+            'periodo_preparaciones' => $periodo_prep,
+            'produccion' => $data_plan_prod,
+            'periodo_produccion' => $periodo_prod
+        ];
     }
 
     /**
@@ -400,19 +618,36 @@ class CronogramaInfraestructuraPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function mostrar_perforaciones_periodo(ShowInfraestructuraPeriodo $request){
-        $datos_mina = DatosMina::findBySlug($request->datos_mina);
+        $id_datos_mina = DatosMina::findBySlug($request->datos_mina);
         $data = $this->repository->queryAll()->
-                where('id_datos_mina', $datos_mina->id)->
+                where('id_datos_mina', $id_datos_mina->id)->
                 whereNull('deleted_at')->
                 get()->load('valores');
 
-        $avance_tronadura = $datos_mina->avance_tronadura;
-        $profundidad_tiro = $datos_mina->profundidad_tiro;
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $avance_tronadura = $id_datos_mina->avance_tronadura;
+        $profundidad_tiro = $id_datos_mina->profundidad_tiro;
         $ano = $request->ano;
 
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
+        $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
+        $periodo_infra = [];
+        $periodo_prep = [];
+        $periodo_prod = [];
+        $mas = 0;
+        //calcula perforaciones infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($value_2->ano == $ano) {
@@ -421,34 +656,126 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         $valor_desgloce_t = $data_values[$value_2->periodo]['valor_desgloce_periodo'] + ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
                         $data_values->put($periodo, [
                             'periodo' => $periodo,
-                            'valor_desgloce_periodo' => $valor_desgloce_t,
+                            'valor_desgloce_periodo' => round($valor_desgloce_t),
                         ]);
                     } else {
                         $periodo = $value_2->periodo;
-                        $valor_desgloce_t = $value_2->valor_desgloce;
+                        $valor_desgloce_t = ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
                         $data_values->put($periodo, [
                             'periodo' => $periodo,
-                            'valor_desgloce_periodo' => ($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro,
+                            'valor_desgloce_periodo' => round($valor_desgloce_t),
                         ]);
+                        if($periodo > $mas){
+                            array_push($periodo_infra, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_infra);
+                        }
                     }
-                    $total_desgloce += ($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
                 }
             }
-            $data_plan->put($value->id,[
-                'ano' => $ano,
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
-                'total_desgloce_periodo' => $total_desgloce,
-                'valores' => $data_values,
+                'total_desgloce_total' => $data_values->sum('valor_desgloce_periodo'),
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
 
-        return $data_plan;
+        $mas = 0;
+        //calcula perforaciones preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($value_2->ano == $ano) {
+                    if($data_values_prep->has($value_2->periodo)) {
+                        $periodo = $data_values_prep[$value_2->periodo]['periodo'];
+                        $valor_desgloce_t = $data_values_prep[$value_2->periodo]['valor_desgloce_periodo'] + ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
+                        $data_values_prep->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => round($valor_desgloce_t),
+                        ]);
+                    } else {
+                        $periodo = $value_2->periodo;
+                        $valor_desgloce_t = ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
+                        $data_values_prep->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => round($valor_desgloce_t),
+                        ]);
+                        if($periodo > $mas){
+                            array_push($periodo_prep, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_prep);
+                        }
+                    }
+                }
+            }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_periodo'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+
+        $mas = 0;
+        //calcula perforaciones produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($value_2->ano == $ano) {
+                    if($data_values_prod->has($value_2->periodo)) {
+                        $periodo = $data_values_prod[$value_2->periodo]['periodo'];
+                        $valor_desgloce_t = $data_values_prod[$value_2->periodo]['valor_desgloce_periodo'] + ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
+                        $data_values_prod->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => round($valor_desgloce_t),
+                        ]);
+                    } else {
+                        $periodo = $value_2->periodo;
+                        $valor_desgloce_t = ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
+                        $data_values_prod->put($periodo, [
+                            'periodo' => $periodo,
+                            'valor_desgloce_periodo' => round($valor_desgloce_t),
+                        ]);
+                        if($periodo > $mas){
+                            array_push($periodo_prod, [
+                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'label' => 'Periodo '.$periodo,
+                            ]);
+                            $mas = max($periodo_prod);
+                        }
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
+
+        return [
+            'infraestructura' => $data_plan,
+            'periodo_infraestructura' => $periodo_infra,
+            'preparacion' => $data_plan_prep,
+            'periodo_preparaciones' => $periodo_prep,
+            'produccion' => $data_plan_prod,
+            'periodo_produccion' => $periodo_prod
+        ];
     }
 
     /**
@@ -571,7 +898,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
-                'total_desgloce_periodo' => $data_values->sum('valor_desgloce_anual'),
+                'total_desgloce_total' => $data_values->sum('valor_desgloce_anual'),
                 'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
@@ -611,7 +938,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
-                'total_desgloce_periodo' => $data_values->sum('valor_desgloce_anual'),
+                'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_anual'),
                 'valores' => $data_values_prep->toArray(),
             ]);
             $data_values_prep = collect([]);
@@ -647,7 +974,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             }
             array_push($data_plan_prod,[
                 'nombre' => $value->nombre_produccion,
-                'total_desgloce_periodo' => $data_values->sum('valor_desgloce_anual'),
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
                 'valores' => $data_values_prod->toArray(),
             ]);
             $data_values_prod = collect([]);
@@ -676,10 +1003,26 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 whereNull('deleted_at')->
                 get()->load('valores');
 
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $id_datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
+        $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
         $anos_infra = [];
+        $anos_prep = [];
+        $anos_prod = [];
+        $mas = 0;
+        //plan mina de infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
@@ -696,27 +1039,110 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
                     ]);
-                    array_push($anos_infra, [
-                        'key' => $ano,
-                        'label' => 'Año '.$ano,
-                    ]);
+                    if($ano > $mas){
+                        array_push($anos_infra, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_infra);
+                    }
                 }
             }
-            $data_plan->put($value->id,[
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_anual' => $data_values->sum('valor_desgloce_anual'),
-                'valores' => $data_values,
-                'anos_infraestructura' => $anos_infra
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
+        $mas = 0;
+        //plan mina preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prep->has($value_2->ano)) {
+                    $ano = $data_values_prep[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prep[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce*($value->area*$value->densidad_esteril);
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->valor_desgloce;
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prep, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prep);
+                    }
+                }
+            }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_anual' => $data_values_prep->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+        $mas = 0;
+        //calcula plan mina produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prod->has($value_2->ano)) {
+                    $ano = $data_values_prod[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prod[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->valor_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prod, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prod);
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_anual' => $data_values_prod->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
 
-        return $data_plan;
+        return [
+            'infraestructura' => $data_plan,
+            'anos_infraestructura' => $anos_infra,
+            'preparacion' => $data_plan_prep,
+            'anos_preparaciones' => $anos_prep,
+            'produccion' => $data_plan_prod,
+            'anos_produccion' => $anos_prod
+        ];
     }
 
     /**
@@ -731,45 +1157,150 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 whereNull('deleted_at')->
                 get()->load('valores');
 
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
         $avance_tronadura = $datos_mina->avance_tronadura;
         $profundidad_tiro = $datos_mina->profundidad_tiro;
         $ano = $request->ano;
 
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
+        $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
+        $anos_infra = [];
+        $anos_prep = [];
+        $anos_prod = [];
+        $mas = 0;
+        //calcular perforaciones infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
                     $ano = $data_values[$value_2->ano]['ano'];
-                    $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
+                    $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
                     $data_values->put($ano, [
                         'ano' => $ano,
-                        'valor_desgloce_anual' => $valor_desgloce_t,
+                        'valor_desgloce_anual' => round($valor_desgloce_t),
                     ]);
                 } else {
                     $ano = $value_2->ano;
                     $valor_desgloce_t = $value_2->valor_desgloce;
                     $data_values->put($ano, [
                         'ano' => $ano,
-                        'valor_desgloce_anual' => ($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro,
+                        'valor_desgloce_anual' => round(($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro),
                     ]);
+                    if($ano > $mas){
+                        array_push($anos_infra, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_infra);
+                    }
                 }
             }
-            $data_plan->put($value->id,[
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_anual' => $data_values->sum('valor_desgloce_anual'),
-                'valores' => $data_values,
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
+        $mas = 0;
+        //calcular perforaciones preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prep->has($value_2->ano)) {
+                    $ano = $data_values_prep[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prep[$value_2->ano]['valor_desgloce_anual'] + ($value_2->valor_desgloce/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro;
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => round($valor_desgloce_t),
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->valor_desgloce;
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => round(($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro),
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prep, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prep);
+                    }
+                }
+            }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_anual' => $data_values_prep->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+        $mas = 0;
+        //calcula perforaciones produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prod->has($value_2->ano)) {
+                    $ano = $data_values_prod[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prod[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->registro_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prod, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prod);
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_anual' => $data_values_prod->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
 
-        return $data_plan;
+        return [
+            'infraestructura' => $data_plan,
+            'anos_infraestructura' => $anos_infra,
+            'preparacion' => $data_plan_prep,
+            'anos_preparaciones' => $anos_prep,
+            'produccion' => $data_plan_prod,
+            'anos_produccion' => $anos_prod
+        ];
     }
 
     /**
@@ -784,18 +1315,35 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 whereNull('deleted_at')->
                 get()->load('valores');
 
+        $data_preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina', $datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
+        $data_produccion = CronogramaProduccionPeriodo::where('id_datos_mina', $datos_mina->id)->
+                whereNull('deleted_at')->
+                get()->load('valores');
+
         $avance_tronadura = $datos_mina->avance_tronadura;
         $profundidad_tiro = $datos_mina->profundidad_tiro;
         $ano = $request->ano;
 
         $data_values = collect([]);
-        $data_plan = collect([]);
+        $data_values_prep = collect([]);
+        $data_values_prod = collect([]);
+        $data_plan = [];
+        $data_plan_prep = [];
+        $data_plan_prod = [];
         $total_desgloce = 0;
+        $anos_infra = [];
+        $anos_prep = [];
+        $anos_prod = [];
+        $mas = 0;
+        //calcular perforaciones infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
                     $ano = $data_values[$value_2->ano]['ano'];
-                    $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($valor_desgloce_t/$avance_tronadura);
+                    $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($value_2->valor_desgloce/$avance_tronadura);
                     $data_values->put($ano, [
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
@@ -805,68 +1353,112 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     $valor_desgloce_t = $value_2->valor_desgloce;
                     $data_values->put($ano, [
                         'ano' => $ano,
-                        'valor_desgloce_anual' => ($valor_desgloce_t/$avance_tronadura),
+                        'valor_desgloce_anual' => ($value_2->valor_desgloce/$avance_tronadura),
                     ]);
+                    if($ano > $mas){
+                        array_push($anos_infra, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_infra);
+                    }
                 }
             }
-            $data_plan->put($value->id,[
+            array_push($data_plan,[
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
                 'longitud' => $value->longitud,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_anual' => $data_values->sum('valor_desgloce_anual'),
-                'valores' => $data_values,
+                'valores' => $data_values->toArray(),
             ]);
             $data_values = collect([]);
             $total_desgloce = 0;
         }
-
-        return $data_plan;
-    }
-
-    /**
-     * Search InfraestructuraPeriodo and add all values year
-     * @param Request $request
-     * @return \Illuminate\Pagination\LengthAwarePaginator
-     */
-    /*
-    public function anos_infraestructura (ShowInfraestructuraPeriodo $request) {
-        $datos_mina = DatosMina::findBySlug($request->datos_mina);
-        $data = $this->repository->queryAll()->
-                where('id_datos_mina', $datos_mina->id)->
-                whereNull('deleted_at')->
-                get()->load('valores');
-
-            foreach($data as $value) {
-                foreach($value->valores as $value_2) {
-                    if($data_values->has($value_2->ano)) {
-                        $ano = $data_values[$value_2->ano]['ano'];
-                        $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($valor_desgloce_t/$avance_tronadura);
-                        $data_values->put($ano, [
-                            'ano' => $ano,
-                            'valor_desgloce_anual' => $valor_desgloce_t,
+        $mas = 0;
+        //calcular perforaciones preparacion
+        foreach($data_preparacion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prep->has($value_2->ano)) {
+                    $ano = $data_values_prep[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prep[$value_2->ano]['valor_desgloce_anual'] + ($value_2->valor_desgloce/$avance_tronadura);
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->valor_desgloce;
+                    $data_values_prep->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => ($valor_desgloce_t/$avance_tronadura),
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prep, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
                         ]);
-                    } else {
-                        $ano = $value_2->ano;
-                        $valor_desgloce_t = $value_2->valor_desgloce;
-                        $data_values->put($ano, [
-                            'ano' => $ano,
-                            'valor_desgloce_anual' => ($valor_desgloce_t/$avance_tronadura),
-                        ]);
+                        $mas = max($anos_prep);
                     }
                 }
-                $data_plan->put($value->id,[
-                    'nombre' => $value->nombre_infraestructura,
-                    'seccion' => $value->seccion,
-                    'area' => $value->area,
-                    'longitud' => $value->longitud,
-                    'nro_tiros' => $value->nro_tiros,
-                    'total_desgloce_anual' => $data_values->sum('valor_desgloce_anual'),
-                    'valores' => $data_values,
-                ]);
-                    
             }
+            array_push($data_plan_prep,[
+                'nombre' => $value->nombre_infraestructura,
+                'seccion' => $value->seccion,
+                'area' => $value->area,
+                'longitud' => $value->longitud,
+                'nro_tiros' => $value->nro_tiros,
+                'total_desgloce_anual' => $data_values_prep->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prep->toArray(),
+            ]);
+            $data_values_prep = collect([]);
+            $total_desgloce = 0;
+        }
+        $mas = 0;
+        //calcula perforaciones produccion
+        foreach($data_produccion as $value) {
+            foreach($value->valores as $value_2) {
+                if($data_values_prod->has($value_2->ano)) {
+                    $ano = $data_values_prod[$value_2->ano]['ano'];
+                    $valor_desgloce_t = $data_values_prod[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                } else {
+                    $ano = $value_2->ano;
+                    $valor_desgloce_t = $value_2->registro_desgloce;
+                    $data_values_prod->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                    if($ano > $mas){
+                        array_push($anos_prod, [
+                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'label' => 'Año '.$ano,
+                        ]);
+                        $mas = max($anos_prod);
+                    }
+                }
+            }
+            array_push($data_plan_prod,[
+                'nombre' => $value->nombre_produccion,
+                'total_desgloce_anual' => $data_values_prod->sum('valor_desgloce_anual'),
+                'valores' => $data_values_prod->toArray(),
+            ]);
+            $data_values_prod = collect([]);
+            $total_desgloce = 0;
+        }
+
+        return [
+            'infraestructura' => $data_plan,
+            'anos_infraestructura' => $anos_infra,
+            'preparacion' => $data_plan_prep,
+            'anos_preparaciones' => $anos_prep,
+            'produccion' => $data_plan_prod,
+            'anos_produccion' => $anos_prod
+        ];
     }
-    */
+
 }
