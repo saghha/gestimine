@@ -896,7 +896,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     ]);
                     if($ano > $mas){
                         array_push($anos_infra, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
                         array_push($array_ano, $ano);
@@ -938,7 +938,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     ]);
                     if($ano > $mas){
                         array_push($anos_prep, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
                         array_push($array_ano, $ano);
@@ -980,7 +980,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     ]);
                     if($ano > $mas){
                         array_push($anos_prod, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
                         array_push($array_ano, $ano);
