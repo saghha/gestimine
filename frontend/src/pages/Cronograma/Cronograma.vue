@@ -1,7 +1,9 @@
 <template>
   <div class="col-lg-12">
     <div class="mt-2">
-      <b-button variant="primary" @click="handleNewModal(true)">Agregar Item</b-button>
+      <b-button variant="primary" @click="handleNewModal(true, 'infraestructura')" v-if="tab_selected == 'infraestructura'">Agregar Item Infraestructura</b-button>
+      <b-button variant="primary" @click="handleNewModal(true, 'preparación')" v-if="tab_selected == 'preparación'">Agregar Item Preparación</b-button>
+      <b-button variant="primary" @click="handleNewModal(true, 'producción')" v-if="tab_selected == 'producción'">Agregar Item Producción</b-button>
     </div>
     <div class="card mt-2">
       <div class="card-body">
@@ -23,10 +25,10 @@
                       <b-td>{{item.nro_tiros}}</b-td>
                       <b-td>{{item.longitud}}</b-td>
                       <b-td class="text-center" v-for="(valor, index_valor) in item.valores" :key="index_valor">{{formatAllMoney(valor.valor_desgloce_anual)}}</b-td>
-                      <b-td>{{formatAllMoney(item.total_desgloce_periodo)}}</b-td>
+                      <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
                       <b-td>
                         <b-button-group>
-                          <b-button variant="warning" class="btn-sm">Editar</b-button>
+                          <b-button variant="warning" class="btn-sm" @click="selectItem(item)">Editar</b-button>
                           <b-button variant="danger" class="btn-sm">Eliminar</b-button>
                         </b-button-group>
                       </b-td>
@@ -67,16 +69,25 @@
         </b-tabs>
       </div>
     </div>
-    <NewItemCronograma v-if="showNewItemModal" :showModal="showNewItemModal" @close="handleNewModal(false)"/>
+    <NewItemCronograma v-if="showNewItemModal" :showModal="showNewItemModal" :id_datos_mina="this.$store.getters.slugDatosMina" @close="handleNewModal(false)" @add="getCronograma()"/>
+    <EditItemCronograma
+      v-if="editInfraItemModal"
+      :showModal="editInfraItemModal"
+      :id_dato="selectedEdit.slug"
+      :id_datos_mina="this.$store.getters.slugDatosMina"
+      @close="handleEditModal(false)"
+      @add="getCronograma()"/>
   </div>
 </template>
 <script>
 import NewItemCronograma from './New'
+import EditItemCronograma from './EditInfraestructura'
 import helpers from '../../components/Helper'
 export default {
   name: 'Cronograma',
   components: {
-    NewItemCronograma
+    NewItemCronograma,
+    EditItemCronograma
   },
   data () {
     return {
@@ -84,6 +95,7 @@ export default {
         {"nombre":"OPERACIONEES PRUEBA","seccion":"6X6","area":"36.00","longitud":"200.00","nro_tiros":40,"total_desgloce_periodo":100,"valores":{"2021":{"ano":2021,"valor_desgloce_anual":100}}}
       ],
       showNewItemModal: false,
+      editInfraItemModal: false,
       datos_final: [
         {total: 2330003}
       ],
@@ -101,6 +113,7 @@ export default {
         {key: 'total_desgloce', label: 'Total'},
         {key: 'options', label: 'Opciones'},
       ],
+      selectedEdit: {},
       anos_infraestructura: [],
       tab_selected: 'infraestructura',
       fields_prod: [
@@ -183,8 +196,26 @@ export default {
     selectTab: function (tab_name) {
       this.tab_selected = tab_name
     },
-    handleNewModal: function (cond) {
-      this.showNewItemModal = cond
+    handleEditModal: function (cond, tab) {
+      if(!cond) {
+        this.editInfraItemModal = cond
+      }
+      if(tab == 'infraestructura') {
+        this.editInfraItemModal = cond
+      }
+    },
+    selectItem: function (item) {
+      console.log("edita")
+      this.selectedEdit = JSON.parse(JSON.stringify(item))
+      this.handleEditModal(true, this.tab_selected)
+    },
+    handleNewModal: function (cond, tab) {
+      if(!cond) {
+        this.showNewItemModal = cond
+      }
+      if(tab == 'infraestructura') {
+        this.showNewItemModal = cond
+      }
     }
   }
 }

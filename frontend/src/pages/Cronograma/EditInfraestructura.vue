@@ -1,12 +1,12 @@
 <template>
   <b-modal v-model="showModal" v-if="showModal" size="xl" @hide="closeModal()" hide-footer>
     <template v-slot:modal-title>
-      <strong>Agregar Item</strong>
+      <strong>Editar Item</strong>
     </template>
     <ValidationObserver v-slot="{invalid}">
       <div class="row">
         <div class="col-12 text-right">
-          <b-button variant="success" :disabled="invalid || info.valores.length == 0" @click="addItem()">Agregar item</b-button>
+          <b-button variant="warning" :disabled="invalid || info.valores.length == 0" @click="addItem()">Editar item</b-button>
         </div>
         <div class="col-ld-4 col-md-4 col-sm-12">
           <ValidationProvider rules="required" v-slot="v">
@@ -121,7 +121,7 @@
 import VueCurrencyInput from 'vue-currency-input'
 import helpers from '../../components/Helper'
 export default {
-  name: 'NewItemCronograma',
+  name: 'EditItemCronograma',
   components: {
     VueCurrencyInput
   },
@@ -129,6 +129,10 @@ export default {
     showModal: {
       type: Boolean,
       default: false
+    },
+    id_dato: {
+      type: String,
+      default: null
     },
     id_datos_mina: {
       type: String,
@@ -152,10 +156,19 @@ export default {
     }
   },
   created () {
-
   },
   methods: {
     ...helpers,
+    getDato: function () {
+      this.$store.commit('setLoading', true)
+      axios.get('cronograma/infraestructura/'+this.id_dato).then((response) => {
+        this.info = response.data
+      }).catch((err) => {
+        this.showToast({icon: 'err', title: err.response.data.message})
+      }).finally(() => {
+        this.$store.commit('setLoading', false)
+      })
+    },
     closeModal: function() {
       this.$emit('close')
     },
