@@ -54,14 +54,43 @@
           <b-tab title="Preparación" @click="selectTab('preparación')">
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12">
-                <b-table :items="preparaciones" :fields="fields_prepa" responsive small hover no-border-collapse striped>
-                  <template #cell(options)="row">
-                    <b-button-group>
-                      <b-button variant="warning" class="btn-sm">Editar</b-button>
-                      <b-button variant="danger" class="btn-sm">Eliminar</b-button>
-                    </b-button-group>
-                  </template>
-                </b-table>
+                <b-table-simple hover small caption-top responsive>
+                  <b-thead>
+                    <b-tr>
+                      <b-th sticky-column>Nombre Preparación</b-th>
+                      <b-th sticky-column>Área</b-th>
+                      <b-th sticky-column>Sección</b-th>
+                      <b-th sticky-column>N° Tiros</b-th>
+                      <b-th sticky-column>Metros Totales</b-th>
+                      <b-th v-for="(anio, index_field) in anos_preparaciones" :key="index_field">
+                        <div class="pointer" @click="selectValue(anio.key)">
+                          {{anio.label}}
+                        </div>
+                        </b-th>
+                      <b-th>Total</b-th>
+                      <b-th>Opciones</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="(item, index_item) in preparaciones" :key="index_item">
+                      <b-td>{{item.nombre}}</b-td>
+                      <b-td>{{item.area}}</b-td>
+                      <b-td>{{item.seccion}}</b-td>
+                      <b-td>{{item.nro_tiros}}</b-td>
+                      <b-td>{{item.longitud}}</b-td>
+                      <b-td class="text-center" v-for="(value_ano, index_ano) in anos_preparaciones" :key="index_ano">
+                        {{mostrarValor(value_ano, item)}}
+                      </b-td>
+                      <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
+                      <b-td>
+                        <b-button-group>
+                          <b-button variant="warning" class="btn-sm" @click="selectItem(item)">Editar</b-button>
+                          <b-button variant="danger" class="btn-sm">Eliminar</b-button>
+                        </b-button-group>
+                      </b-td>
+                    </b-tr>
+                  </b-tbody>
+                </b-table-simple>
               </div>
             </div>
           </b-tab>
@@ -83,9 +112,17 @@
       </div>
     </div>
     <NewItemCronograma v-if="showNewItemModal" :showModal="showNewItemModal" :id_datos_mina="this.$store.getters.slugDatosMina" @close="handleNewModal(false)" @add="getCronograma()"/>
+    <NewPreparacionCronograma v-if="showNewPrepaModal" :showModal="showNewPrepaModal" :id_datos_mina="this.$store.getters.slugDatosMina" @close="handleNewModal(false)" @add="getCronograma()"/>
     <EditItemCronograma
       v-if="editInfraItemModal"
       :showModal="editInfraItemModal"
+      :id_dato="selectedEdit.slug"
+      :id_datos_mina="this.$store.getters.slugDatosMina"
+      @close="handleEditModal(false)"
+      @edit="getCronograma()"/>
+    <EditPreparacionCronograma
+      v-if="editPrepaItemModal"
+      :showModal="editPrepaItemModal"
       :id_dato="selectedEdit.slug"
       :id_datos_mina="this.$store.getters.slugDatosMina"
       @close="handleEditModal(false)"
@@ -100,6 +137,8 @@
 <script>
 import NewItemCronograma from './New'
 import EditItemCronograma from './EditInfraestructura'
+import EditPreparacionCronograma from './EditPreparacionModal.vue'
+import NewPreparacionCronograma from './NewPreparacion.vue'
 import helpers from '../../components/Helper'
 import CronogramaPeriodo from './CronogramaPeriodo'
 export default {
@@ -107,15 +146,17 @@ export default {
   components: {
     NewItemCronograma,
     EditItemCronograma,
-    CronogramaPeriodo
+    CronogramaPeriodo,
+    NewPreparacionCronograma,
+    EditPreparacionCronograma
   },
   data () {
     return {
-      datos: [
-        {"nombre":"OPERACIONEES PRUEBA","seccion":"6X6","area":"36.00","longitud":"200.00","nro_tiros":40,"total_desgloce_periodo":100,"valores":{"2021":{"ano":2021,"valor_desgloce_anual":100}}}
-      ],
+      datos: [],
       showNewItemModal: false,
+      showNewPrepaModal: false,
       editInfraItemModal: false,
+      editPrepaItemModal: false,
       datos_final: [
         {total: 2330003}
       ],
@@ -136,6 +177,8 @@ export default {
       ],
       selectedEdit: {},
       anos_infraestructura: [],
+      anos_preparaciones: [],
+      anos_produccion: [],
       showPeriodoModal: false,
       tab_selected: 'infraestructura',
       fields_prod: [
@@ -200,8 +243,13 @@ export default {
         ]
         //this.fields.push(anios_infra)
         var anios_infa = response.data.anos_infraestructura
+        var anios_prepa = response.data.anos_preparaciones
+        var anios_prod = response.data.anos_produccion
 
         this.anos_infraestructura = _.sortBy(anios_infa, (value, index) => {return value.key});
+        this.anos_preparaciones = _.sortBy(anios_prepa, (value, index) => {return value.key});
+        this.anos_produccion = _.sortBy(anios_prod, (value, index) => {return value.key});
+
         this.fields_prepa = _.concat(this.fields_prepa, response.data.anos_preparaciones)
         this.fields_prepa = _.concat(this.fields_prepa, [{key: 'total', label: 'Total'},
         {key: 'options', label: 'Opciones'}])
@@ -220,9 +268,12 @@ export default {
     handleEditModal: function (cond, tab) {
       if(!cond) {
         this.editInfraItemModal = cond
+        this.editPrepaItemModal = cond
       }
       if(tab == 'infraestructura') {
         this.editInfraItemModal = cond
+      } else if(tab == 'preparación') {
+        this.editPrepaItemModal = cond
       }
     },
     selectValue: function (anio) {
@@ -260,9 +311,12 @@ export default {
     handleNewModal: function (cond, tab) {
       if(!cond) {
         this.showNewItemModal = cond
+        this.showNewPrepaModal = cond
       }
       if(tab == 'infraestructura') {
         this.showNewItemModal = cond
+      } else if (tab == 'preparación') {
+        this.showNewPrepaModal = cond
       }
     }
   }
