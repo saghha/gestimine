@@ -1043,6 +1043,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $anos_prep = [];
         $anos_prod = [];
         $mas = 0;
+        $array_ano = [];
         //plan mina de infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
@@ -1060,16 +1061,22 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
                     ]);
-                    if($ano > $mas){
+                    $data_values->put($ano, [
+                        'ano' => $ano,
+                        'valor_desgloce_anual' => $valor_desgloce_t,
+                    ]);
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_infra, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_infra);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
@@ -1081,6 +1088,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $data_values = collect([]);
             $total_desgloce = 0;
         }
+        $array_ano = [];
         $mas = 0;
         //plan mina preparacion
         foreach($data_preparacion as $value) {
@@ -1099,16 +1107,18 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
                     ]);
-                    if($ano > $mas){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_prep, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_prep);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan_prep,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
@@ -1138,16 +1148,18 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
-                    if($ano > $mas){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_prod, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_prod);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan_prod,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_produccion,
                 'total_desgloce_anual' => $data_values_prod->sum('valor_desgloce_anual'),
                 'valores' => $data_values_prod->toArray(),
@@ -1158,11 +1170,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => $anos_infra,
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => $anos_prep,
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => $anos_prod
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
         ];
     }
 
@@ -1201,6 +1213,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $anos_prep = [];
         $anos_prod = [];
         $mas = 0;
+        $array_ano = [];
         //calcular perforaciones infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
@@ -1218,16 +1231,18 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => round(($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro),
                     ]);
-                    if($ano > $mas){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_infra, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_infra);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
@@ -1239,6 +1254,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $data_values = collect([]);
             $total_desgloce = 0;
         }
+        $array_ano = [];
         $mas = 0;
         //calcular perforaciones preparacion
         foreach($data_preparacion as $value) {
@@ -1257,16 +1273,18 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => round(($valor_desgloce_t/$avance_tronadura)*$value->nro_tiros*$profundidad_tiro),
                     ]);
-                    if($ano > $mas){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_prep, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_prep);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan_prep,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
@@ -1278,34 +1296,37 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $data_values_prep = collect([]);
             $total_desgloce = 0;
         }
+        $array_ano = [];
         $mas = 0;
         //calcula perforaciones produccion
         foreach($data_produccion as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values_prod->has($value_2->ano)) {
                     $ano = $data_values_prod[$value_2->ano]['ano'];
-                    $valor_desgloce_t = $data_values_prod[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce;
+                    $valor_desgloce_t = $data_values_prod[$value_2->ano]['valor_desgloce_anual'] + $value_2->valor_desgloce_perforacion;
                     $data_values_prod->put($ano, [
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
                 } else {
                     $ano = $value_2->ano;
-                    $valor_desgloce_t = $value_2->registro_desgloce;
+                    $valor_desgloce_t = $value_2->valor_desgloce_perforacion;
                     $data_values_prod->put($ano, [
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t,
                     ]);
-                    if($ano > $mas){
+                    if(!in_array($ano, $array_ano)){
                         array_push($anos_prod, [
-                            'key' => 'valores.'.$ano.'.valor_desgloce_anual',
+                            'key' => $ano,
                             'label' => 'Año '.$ano,
                         ]);
-                        $mas = max($anos_prod);
+                        array_push($array_ano, $ano);
+                        $mas = max($array_ano);
                     }
                 }
             }
             array_push($data_plan_prod,[
+                'slug' => $value->slug,
                 'nombre' => $value->nombre_produccion,
                 'total_desgloce_anual' => $data_values_prod->sum('valor_desgloce_anual'),
                 'valores' => $data_values_prod->toArray(),
@@ -1316,11 +1337,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => $anos_infra,
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => $anos_prep,
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => $anos_prod
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
         ];
     }
 
@@ -1359,7 +1380,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $anos_prep = [];
         $anos_prod = [];
         $mas = 0;
-        //calcular perforaciones infraestructura
+        //calcular tronadura infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
@@ -1398,7 +1419,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $total_desgloce = 0;
         }
         $mas = 0;
-        //calcular perforaciones preparacion
+        //calcular tronadura preparacion
         foreach($data_preparacion as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values_prep->has($value_2->ano)) {
@@ -1437,7 +1458,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $total_desgloce = 0;
         }
         $mas = 0;
-        //calcula perforaciones produccion
+        //calcula tronadura produccion
         foreach($data_produccion as $value) {
             foreach($value->valores as $value_2) {
                 if($data_values_prod->has($value_2->ano)) {

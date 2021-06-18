@@ -42,6 +42,16 @@ class CronogramaProduccionPeriodoController extends Controller
     }
 
     /**
+     * get a ShowProduccionInfraestructuraPeriodo
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function show(ShowProduccionPeriodo $request, $slug){
+        $data = $this->repository->find($slug);
+        return $data->load('valores');
+    }
+
+    /**
      * create ProduccionPeriodo
      * @return ProduccionPeriodo
      */
