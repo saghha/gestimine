@@ -4,15 +4,30 @@
       <div class="row">
         <div class="col-xl-3 col-md-6">
           <stats-card>
-            <div slot="header" class="icon-warning">
-              <i class="nc-icon nc-chart text-warning"></i>
+            <div slot="header" class="icon-danger">
+              <i class="fa fa-exclamation-triangle text-danger"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Capacity</p>
-              <h4 class="card-title">105GB</h4>
+              <p class="card-category">Accidentes hoy</p>
+              <h4 class="card-title">0</h4>
             </div>
             <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
+              <i class="fa fa-exclamation"></i>No esta operativo.
+            </div>
+          </stats-card>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+          <stats-card>
+            <div slot="header" class="icon-warning">
+              <i class="fa fa-exclamation-triangle text-warning"></i>
+            </div>
+            <div slot="content">
+              <p class="card-category">Incidentes hoy</p>
+              <h4 class="card-title">1</h4>
+            </div>
+            <div slot="footer">
+              <i class="fa fa-exclamation"></i>No esta operativo.
             </div>
           </stats-card>
         </div>
@@ -20,29 +35,14 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-success">
-              <i class="nc-icon nc-light-3 text-success"></i>
+              <i class="fa fa-calendar-check-o text-success"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Revenue</p>
-              <h4 class="card-title">$1,345</h4>
+              <p class="card-category">Turno del dia</p>
+              <h4 class="card-title">2</h4>
             </div>
             <div slot="footer">
-              <i class="fa fa-calendar-o"></i>Last day
-            </div>
-          </stats-card>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-          <stats-card>
-            <div slot="header" class="icon-danger">
-              <i class="nc-icon nc-vector text-danger"></i>
-            </div>
-            <div slot="content">
-              <p class="card-category">Errors</p>
-              <h4 class="card-title">23</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-clock-o"></i>Last day
+              <i class="fa fa-exclamation"></i>No esta operativo.
             </div>
           </stats-card>
         </div>
@@ -50,14 +50,14 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-info">
-              <i class="nc-icon nc-favourite-28 text-primary"></i>
+              <i class="fa fa-bar-chart text-primary"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Followers</p>
-              <h4 class="card-title">+45</h4>
+              <p class="card-category">Desempeño</p>
+              <h4 class="card-title text-success">70%</h4>
             </div>
             <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
+              <i class="fa fa-exclamation"></i>No esta operativo.
             </div>
           </stats-card>
         </div>
@@ -69,14 +69,13 @@
                       :chart-options="lineChart.options"
                       :responsive-options="lineChart.responsiveOptions">
             <template slot="header">
-              <h4 class="card-title">Users Behavior</h4>
-              <p class="card-category">24 Hours performance</p>
+              <h4 class="card-title">Avance Cronograma Totales</h4>
+              <p class="card-category">Toneladas / Periodos del Año 2021</p>
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-info"></i> Open
-                <i class="fa fa-circle text-danger"></i> Click
-                <i class="fa fa-circle text-warning"></i> Click Second Time
+                <i class="fa fa-circle text-info"></i> Planificado
+                <i class="fa fa-circle text-danger"></i> Extraido
               </div>
               <hr>
               <div class="stats">
@@ -89,14 +88,13 @@
         <div class="col-md-4">
           <chart-card :chart-data="pieChart.data" chart-type="Pie">
             <template slot="header">
-              <h4 class="card-title">Email Statistics</h4>
-              <p class="card-category">Last Campaign Performance</p>
+              <h4 class="card-title">Tiempo Total del Proyecto</h4>
+              <p class="card-category">Tiempo Total / Tiempo Transcurrido</p>
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-info"></i> Open
-                <i class="fa fa-circle text-danger"></i> Bounce
-                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                <i class="fa fa-circle text-info"></i>Restante
+                <i class="fa fa-circle text-danger"></i>Transcurrido
               </div>
               <hr>
               <div class="stats">
@@ -115,13 +113,13 @@
             :chart-responsive-options="barChart.responsiveOptions"
             chart-type="Bar">
             <template slot="header">
-              <h4 class="card-title">2014 Sales</h4>
-              <p class="card-category">All products including Taxes</p>
+              <h4 class="card-title">2021 Producción</h4>
+              <p class="card-category">Tonaladas totales producción</p>
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-info"></i> Tesla Model S
-                <i class="fa fa-circle text-danger"></i> BMW 5 Series
+                <i class="fa fa-circle text-info"></i> Produccion Planificada
+                <i class="fa fa-circle text-danger"></i> Avance
               </div>
               <hr>
               <div class="stats">
@@ -130,7 +128,7 @@
             </template>
           </chart-card>
         </div>
-
+        <!--
         <div class="col-md-6">
           <card>
             <template slot="header">
@@ -165,6 +163,7 @@
           </card>
 
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -186,22 +185,21 @@
         deleteTooltip: 'Remove',
         pieChart: {
           data: {
-            labels: ['40%', '20%', '40%'],
-            series: [40, 20, 40]
+            labels: ['40 Periodos', '8 Periodos'],
+            series: [80,20]
           }
         },
         lineChart: {
           data: {
-            labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
+            labels: ['Per-1', 'Per-2', 'Per-3', 'Per-4', 'Per-5', 'Per-6', 'Per-7', 'Per-8'],
             series: [
-              [287, 385, 490, 492, 554, 586, 698, 695],
-              [67, 152, 143, 240, 287, 335, 435, 437],
-              [23, 113, 67, 108, 190, 239, 307, 308]
+              [0, 30, 60, 90, 120, 150, 180, 210],
+              [0, 29, 50, 78, 101, 136, 160, 193]
             ]
           },
           options: {
             low: 0,
-            high: 800,
+            high: 210,
             showArea: false,
             height: '245px',
             axisX: {
@@ -227,10 +225,10 @@
         },
         barChart: {
           data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: ['P-1', 'P-2', 'P-3', 'P-4', 'P-5', 'P-6', 'P-7', 'P-8'],
             series: [
-              [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-              [412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636, 695]
+              [542, 443, 320, 780, 553, 453, 326, 434],
+              [412, 243, 280, 580, 453, 353, 300, 365]
             ]
           },
           options: {
