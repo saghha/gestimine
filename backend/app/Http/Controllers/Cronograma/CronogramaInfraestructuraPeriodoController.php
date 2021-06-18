@@ -347,7 +347,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         ]);
                         if($periodo > $mas){
                             array_push($periodo_infra, [
-                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'key' => $periodo,
                                 'label' => 'Periodo '.$periodo,
                             ]);
                             $mas = max($periodo_infra);
@@ -389,7 +389,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         ]);
                         if($periodo > $mas){
                             array_push($periodo_prep, [
-                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'key' => $periodo,
                                 'label' => 'Periodo '.$periodo,
                             ]);
                             $mas = max($periodo_prep);
@@ -431,7 +431,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         ]);
                         if($periodo > $mas){
                             array_push($periodo_prod, [
-                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'key' => $periodo,
                                 'label' => 'Periodo '.$periodo,
                             ]);
                             $mas = max($periodo_prod);

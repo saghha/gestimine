@@ -19,7 +19,11 @@
                       <b-th sticky-column>Sección</b-th>
                       <b-th sticky-column>N° Tiros</b-th>
                       <b-th sticky-column>Metros Totales</b-th>
-                      <b-th v-for="(anio, index_field) in anos_infraestructura" :key="index_field">{{anio.label}}</b-th>
+                      <b-th v-for="(anio, index_field) in anos_infraestructura" :key="index_field">
+                        <div class="pointer" @click="selectValue(anio.key)">
+                          {{anio.label}}
+                        </div>
+                        </b-th>
                       <b-th>Total</b-th>
                       <b-th>Opciones</b-th>
                     </b-tr>
@@ -31,7 +35,9 @@
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
                       <b-td>{{item.longitud}}</b-td>
-                      <b-td class="text-center" v-for="(value_ano, index_ano) in anos_infraestructura" :key="index_ano">{{mostrarValor(value_ano, item)}}</b-td>
+                      <b-td class="text-center" v-for="(value_ano, index_ano) in anos_infraestructura" :key="index_ano">
+                        {{mostrarValor(value_ano, item)}}
+                      </b-td>
                       <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
                       <b-td>
                         <b-button-group>
@@ -84,17 +90,24 @@
       :id_datos_mina="this.$store.getters.slugDatosMina"
       @close="handleEditModal(false)"
       @edit="getCronograma()"/>
+    <CronogramaPeriodo
+      v-if="showPeriodoModal"
+      :showModal="showPeriodoModal"
+      :data="info_periodos"
+      @close="handlePeriodoModal(false)"/>
   </div>
 </template>
 <script>
 import NewItemCronograma from './New'
 import EditItemCronograma from './EditInfraestructura'
 import helpers from '../../components/Helper'
+import CronogramaPeriodo from './CronogramaPeriodo'
 export default {
   name: 'Cronograma',
   components: {
     NewItemCronograma,
-    EditItemCronograma
+    EditItemCronograma,
+    CronogramaPeriodo
   },
   data () {
     return {
@@ -107,6 +120,7 @@ export default {
         {total: 2330003}
       ],
       headers: '',
+      info_periodos: [],
       infraestructuras: [],
       preparaciones: [],
       produccion: [],
@@ -122,6 +136,7 @@ export default {
       ],
       selectedEdit: {},
       anos_infraestructura: [],
+      showPeriodoModal: false,
       tab_selected: 'infraestructura',
       fields_prod: [
         {key: 'nombre_estructura', label: 'Nombre Estructura'},
@@ -184,10 +199,9 @@ export default {
           {key: 'metros_totales', label: 'Metros Totales'},
         ]
         //this.fields.push(anios_infra)
-        this.fields_infra = _.concat(this.fields_infra, response.data.anos_infraestructura)
-        this.fields_infra = _.concat(this.fields_infra, [{key: 'total_desgloce_periodo', label: 'Total'},
-        {key: 'options', label: 'Opciones'}])
-        this.anos_infraestructura = response.data.anos_infraestructura
+        var anios_infa = response.data.anos_infraestructura
+
+        this.anos_infraestructura = _.sortBy(anios_infa, (value, index) => {return value.key});
         this.fields_prepa = _.concat(this.fields_prepa, response.data.anos_preparaciones)
         this.fields_prepa = _.concat(this.fields_prepa, [{key: 'total', label: 'Total'},
         {key: 'options', label: 'Opciones'}])
@@ -211,6 +225,22 @@ export default {
         this.editInfraItemModal = cond
       }
     },
+    selectValue: function (anio) {
+      this.$store.commit('setLoading', true)
+      axios.get('cronograma/infraestructura/mostrar-cronograma-periodo', {
+        params: {
+          ano: anio,
+          datos_mina: this.$store.getters.slugDatosMina
+        }
+      }).then((response) => {
+        this.info_periodos = response.data
+        this.handlePeriodoModal(true)
+      }).catch((err) => {
+        this.showToast({icon: 'success', title: err.response.data.message})
+      }).finally(() => {
+        this.$store.commit('setLoading', false)
+      })
+    },
     mostrarValor: function (value_ano, item) {
       var data = _.find(item.valores, (value, index) => {return value_ano.key == index})
       if(!!data) {
@@ -218,6 +248,9 @@ export default {
       } else {
         return 0
       }
+    },
+    handlePeriodoModal: function (cond) {
+      this.showPeriodoModal = cond
     },
     selectItem: function (item) {
       console.log("edita")
@@ -235,3 +268,8 @@ export default {
   }
 }
 </script>
+<style>
+.pointer {
+  cursor: pointer;
+}
+</style>
