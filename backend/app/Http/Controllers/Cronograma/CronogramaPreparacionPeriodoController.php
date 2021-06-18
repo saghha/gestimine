@@ -42,6 +42,16 @@ class CronogramaPreparacionPeriodoController extends Controller
     }
 
     /**
+     * get a ShowPreparacionInfraestructuraPeriodo
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function show(ShowPreparacionPeriodo $request, $slug){
+        $data = $this->repository->find($slug);
+        return $data->load('valores');
+    }
+
+    /**
      * create PreparacionPeriodo
      * @return PreparacionPeriodo
      */
