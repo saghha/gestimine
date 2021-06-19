@@ -495,6 +495,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         $periodo_prep = [];
         $periodo_prod = [];
         $mas = 0;
+        $array_periodo = [];
         //calcula plan mina infraestructura
         foreach($data as $value) {
             foreach($value->valores as $value_2) {
@@ -513,12 +514,13 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'periodo' => $periodo,
                             'valor_desgloce_periodo' => $valor_desgloce_t,
                         ]);
-                        if($periodo > $mas){
+                        if(!in_array($periodo, $array_periodo)){
                             array_push($periodo_infra, [
-                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'key' => $periodo,
                                 'label' => 'Periodo '.$periodo,
                             ]);
-                            $mas = max($periodo_infra);
+                            array_push($array_periodo, $periodo);
+                            $mas = max($array_periodo);
                         }
                     }
                 }
@@ -527,7 +529,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
-                'longitud' => $value->longitud,
+                'toneladas' => $value->longitud*$value->area*$value->densidad_esteril,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values->sum('valor_desgloce_periodo'),
                 'valores' => $data_values->toArray(),
@@ -535,7 +537,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $data_values = collect([]);
             $total_desgloce = 0;
         }
-
+        $array_periodo = [];
         $mas = 0;
         //calcula plan mina preparacion
         foreach($data_preparacion as $value) {
@@ -555,12 +557,13 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'periodo' => $periodo,
                             'valor_desgloce_periodo' => $valor_desgloce_t,
                         ]);
-                        if($periodo > $mas){
+                        if(!in_array($periodo, $array_periodo)){
                             array_push($periodo_prep, [
-                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'key' => $periodo,
                                 'label' => 'Periodo '.$periodo,
                             ]);
-                            $mas = max($periodo_prep);
+                            array_push($array_periodo, $periodo);
+                            $mas = max($array_periodo);
                         }
                     }
                 }
@@ -569,7 +572,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
-                'longitud' => $value->longitud,
+                'toneladas' => $value->longitud*$value->area*$value->densidad_esteril,
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_periodo'),
                 'valores' => $data_values_prep->toArray(),
@@ -577,7 +580,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $data_values_prep = collect([]);
             $total_desgloce = 0;
         }
-
+        $array_periodo = [];
         $mas = 0;
         //calcula plan mina produccion
         foreach($data_produccion as $value) {
@@ -597,12 +600,13 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                             'periodo' => $periodo,
                             'valor_desgloce_periodo' => $valor_desgloce_t,
                         ]);
-                        if($periodo > $mas){
+                        if(!in_array($periodo, $array_periodo)){
                             array_push($periodo_prod, [
-                                'key' => 'valores.'.$periodo.'.valor_desgloce_periodo',
+                                'key' => $periodo,
                                 'label' => 'Periodo '.$periodo,
                             ]);
-                            $mas = max($periodo_prod);
+                            array_push($array_periodo, $periodo);
+                            $mas = max($array_periodo);
                         }
                     }
                 }
@@ -618,11 +622,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'periodo_infraestructura' => $periodo_infra,
+            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->toArray(),
             'preparacion' => $data_plan_prep,
-            'periodo_preparaciones' => $periodo_prep,
+            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
             'produccion' => $data_plan_prod,
-            'periodo_produccion' => $periodo_prod
+            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->toArray()
         ];
     }
 
