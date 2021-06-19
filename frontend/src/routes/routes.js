@@ -18,6 +18,7 @@ import Upgrade from 'src/pages/Upgrade.vue'
 import Test from 'src/pages/Test'
 import DatosMina from 'src/pages/DatosMina/DatosMina'
 import Cronograma from 'src/pages/Cronograma/Cronograma'
+import PlanMinero from 'src/pages/PlanMinero/PlanMinero'
 
 const routes = [
   {
@@ -65,6 +66,14 @@ const routes = [
         path: 'cronograma',
         name: 'Cronograma',
         component: Cronograma,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'plan_minero',
+        name: 'Plan Minero',
+        component: PlanMinero,
         meta: {
           requiresAuth: true
         }

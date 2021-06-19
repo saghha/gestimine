@@ -14,7 +14,7 @@
         <i class="nc-icon nc-circle-09"></i>
         <p>Cronograma</p>
       </sidebar-link>
-      <sidebar-link to="/admin/table-list">
+      <sidebar-link to="/admin/plan_minero">
         <i class="nc-icon nc-notes"></i>
         <p>Plan Minero</p>
       </sidebar-link>

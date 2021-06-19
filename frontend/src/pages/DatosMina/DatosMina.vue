@@ -242,9 +242,10 @@ export default {
         confirmButtonText: 'Subir Cambio',
         confirmButtonColor: '#ffc107'
       }).then((result) => {
+        console.log(result)
         if(result.value) {
           console.log("confirma")
-          this.submitEdit()
+          //this.submitEdit()
         } else {
           console.log('rechaza')
         }
