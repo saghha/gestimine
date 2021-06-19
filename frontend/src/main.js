@@ -28,6 +28,7 @@ import * as rules from 'vee-validate/dist/rules';
 import routes from './routes/routes'
 import store from './store/index'
 import vSelect from 'vue-select'
+import Multiselect from 'vue-multiselect'
 import { rutInputDirective } from 'vue-dni';
 import './registerServiceWorker'
 import VueSweetalert2 from 'vue-sweetalert2';
@@ -51,6 +52,7 @@ Vue.use(VueRouter)
 Vue.use(LightBootstrap)
 Vue.directive('rut', rutInputDirective);
 Vue.component('v-select', vSelect)
+Vue.component('multiselect', Multiselect)
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 //Vue.use(VueDatePicker);

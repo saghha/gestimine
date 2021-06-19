@@ -160,6 +160,7 @@
       v-if="showPeriodoModal"
       :showModal="showPeriodoModal"
       :data="info_periodos"
+      :ano="ano_consultado"
       @close="handlePeriodoModal(false)"/>
   </div>
 </template>
@@ -196,46 +197,17 @@ export default {
         {total: 2330003}
       ],
       headers: '',
+      ano_consultado: null,
       info_periodos: [],
       infraestructuras: [],
       preparaciones: [],
       produccion: [],
-      fields_prepa: [
-        {key: 'nombre', label: 'Nombre Estructura'},
-        {key: 'area', label: 'Area'},
-        {key: 'seccion', label: 'Sección'},
-        {key: 'nro_tiros', label: 'N° Tiros'},
-        {key: 'longitud', label: 'Metros Totales'},
-        {key: '2021', label: 'Año 1'},
-        {key: 'total_desgloce', label: 'Total'},
-        {key: 'options', label: 'Opciones'},
-      ],
       selectedEdit: {},
       anos_infraestructura: [],
       anos_preparaciones: [],
       anos_produccion: [],
       showPeriodoModal: false,
       tab_selected: 'infraestructura',
-      fields_prod: [
-        {key: 'nombre_estructura', label: 'Nombre Estructura'},
-        {key: 'area', label: 'Area'},
-        {key: 'ley', label: '% Ley'},
-        {key: 'densidad', label: 'Densidad'},
-        {key: 'metros_totales', label: 'Metros Totales'},
-        {key: 'ano1', label: 'Año 1'},
-        {key: 'total', label: 'Total'},
-        {key: 'options', label: 'Opciones'},
-      ],
-      fields_infra: [
-        {key: 'nombre', label: 'Nombre Estructura'},
-        {key: 'area', label: 'Area'},
-        {key: 'seccion', label: 'Sección'},
-        {key: 'nro_tiros', label: 'N° Tiros'},
-        {key: 'longitud', label: 'Metros Totales'},
-        {key: 'valores.2021.valor_desgloce_anual', label: 'Año 1'},
-        {key: 'total_desgloce', label: 'Total'},
-        {key: 'options', label: 'Opciones'},
-      ]
     }
   },
   created () {
@@ -255,28 +227,7 @@ export default {
         this.infraestructuras = response.data.infraestructura
         this.preparaciones = response.data.preparacion
         this.produccion = response.data.produccion
-        this.fields_infra = [
-          {key: 'nombre', label: 'Nombre Estructura'},
-          {key: 'area', label: 'Area'},
-          {key: 'seccion', label: 'Sección'},
-          {key: 'nro_tiros', label: 'N° Tiros'},
-          {key: 'longitud', label: 'Metros Totales'},
-        ]
-        this.fields_prepa = [
-          {key: 'nombre_estructura', label: 'Nombre Estructura'},
-          {key: 'area', label: 'Area'},
-          {key: 'ley', label: '% Ley'},
-          {key: 'densidad', label: 'Densidad'},
-          {key: 'metros_totales', label: 'Metros Totales'},
-        ]
-        this.fields_prod = [
-          {key: 'nombre_estructura', label: 'Nombre Estructura'},
-          {key: 'area', label: 'Area'},
-          {key: 'ley', label: '% Ley'},
-          {key: 'densidad', label: 'Densidad'},
-          {key: 'metros_totales', label: 'Metros Totales'},
-        ]
-        //this.fields.push(anios_infra)
+
         var anios_infa = response.data.anos_infraestructura
         var anios_prepa = response.data.anos_preparaciones
         var anios_prod = response.data.anos_produccion
@@ -322,6 +273,7 @@ export default {
           datos_mina: this.$store.getters.slugDatosMina
         }
       }).then((response) => {
+        this.ano_consultado = anio
         this.info_periodos = response.data
         this.handlePeriodoModal(true)
       }).catch((err) => {

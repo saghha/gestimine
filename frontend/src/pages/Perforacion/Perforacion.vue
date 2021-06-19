@@ -65,7 +65,7 @@
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
                       <b-td>{{item.tiros_totales}}</b-td>
-                      <b-td class="text-center" v-for="(value_ano, index_ano) in anos_preparaciones" :key="index_ano">
+                      <b-td class="text-left" v-for="(value_ano, index_ano) in anos_preparaciones" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
                       <b-td>{{formatAllMoney(item.total_desgloce_anual)}}</b-td>
@@ -93,7 +93,7 @@
                   <b-tbody>
                     <b-tr v-for="(item, index_item) in produccion" :key="index_item">
                       <b-td>{{item.nombre}}</b-td>
-                      <b-td class="text-center" v-for="(value_ano, index_ano) in anos_produccion" :key="index_ano">
+                      <b-td class="text-left" v-for="(value_ano, index_ano) in anos_produccion" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
                       <b-td>{{formatAllMoney(item.total_desgloce_anual)}}</b-td>
@@ -110,11 +110,12 @@
       v-if="showPeriodoModal"
       :showModal="showPeriodoModal"
       :data="info_periodos"
+      :ano="ano_consultado"
       @close="handlePeriodoModal(false)"/>
   </div>
 </template>
 <script>
-import CronogramaPeriodo from '../Cronograma/CronogramaPeriodo.vue'
+import CronogramaPeriodo from './CronogramaPeriodo.vue'
 import helpers from '../../components/Helper'
 export default {
   name: 'Perforaciones',
@@ -125,6 +126,7 @@ export default {
     return {
       datos: [],
       info_periodos: [],
+      ano_consultado: null,
       infraestructuras: [],
       preparaciones: [],
       produccion: [],
@@ -184,6 +186,7 @@ export default {
           datos_mina: this.$store.getters.slugDatosMina
         }
       }).then((response) => {
+        this.ano_consultado = anio
         this.info_periodos = response.data
         this.handlePeriodoModal(true)
       }).catch((err) => {

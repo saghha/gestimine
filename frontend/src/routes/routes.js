@@ -23,6 +23,7 @@ import Perforacion from 'src/pages/Perforacion/Perforacion'
 import Tronaduras from 'src/pages/Tronadura/Tronadura'
 import Carguios from 'src/pages/Carguio/Carguio'
 import Transporte from 'src/pages/Transporte/Transporte'
+import Alerta from 'src/pages/Alertas/EnviarAlerta'
 
 const routes = [
   {
@@ -110,6 +111,14 @@ const routes = [
         path: 'transportes',
         name: 'Transporte',
         component: Transporte,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'alertas',
+        name: 'Alerta',
+        component: Alerta,
         meta: {
           requiresAuth: true
         }

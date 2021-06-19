@@ -1,9 +1,12 @@
 <template>
   <b-modal v-model="showModal" v-if="showModal" size="xl" @hide="closeModal()" hide-footer>
+    <template #modal-title>
+      <strong>Información de periodos para el año {{ano}}</strong>
+    </template>
     <b-tabs>
       <b-tab title="Infraestructuras">
         <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="col-lg-12 col-md-12 col-sm-12" v-if="data.periodo_infraestructura.length > 0">
             <b-table-simple hover small caption-top responsive>
               <b-thead>
                 <b-tr>
@@ -11,7 +14,7 @@
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
-                  <b-th sticky-column>Metros Totales</b-th>
+                  <b-th sticky-column>Toneladas</b-th>
                   <b-th v-for="(periodo, index_field) in data.periodo_infraestructura" :key="index_field">
                     {{periodo.label}}
                   </b-th>
@@ -24,7 +27,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.longitud}}</b-td>
+                  <b-td>{{item.tronadura}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_infraestructura" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>
@@ -33,11 +36,14 @@
               </b-tbody>
             </b-table-simple>
           </div>
+          <div class="col-12" v-else>
+            <h4>No hay información para el año {{ano}}</h4>
+          </div>
         </div>
       </b-tab>
       <b-tab title="Preparación">
         <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="col-lg-12 col-md-12 col-sm-12" v-if="data.periodo_preparaciones.length > 0">
             <b-table-simple hover small caption-top responsive>
               <b-thead>
                 <b-tr>
@@ -45,7 +51,7 @@
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
-                  <b-th sticky-column>Metros Totales</b-th>
+                  <b-th sticky-column>Toneladas</b-th>
                   <b-th v-for="(periodo, index_field) in data.periodo_preparaciones" :key="index_field">
                     {{periodo.label}}
                   </b-th>
@@ -58,7 +64,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.longitud}}</b-td>
+                  <b-td>{{item.tronadura}}</b-td>
                   <b-td class="text-left" v-for="(value_ano, index_ano) in data.periodo_preparaciones" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>
@@ -67,11 +73,14 @@
               </b-tbody>
             </b-table-simple>
           </div>
+          <div class="col-12" v-else>
+            <h4>No hay información para el año {{ano}}</h4>
+          </div>
         </div>
       </b-tab>
       <b-tab title="Producción">
         <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="col-lg-12 col-md-12 col-sm-12" v-if="data.periodo_produccion.length > 0">
             <b-table-simple hover small caption-top responsive>
               <b-thead>
                 <b-tr>
@@ -93,6 +102,9 @@
               </b-tbody>
             </b-table-simple>
           </div>
+          <div class="col-12" v-else>
+            <h4>No hay información para el año {{ano}}</h4>
+          </div>
         </div>
       </b-tab>
     </b-tabs>
@@ -111,6 +123,10 @@ export default {
       type: Boolean,
       default: false
     },
+    ano: {
+      type: Number,
+      default: null
+    }
   },
   data () {
     return {

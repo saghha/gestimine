@@ -110,11 +110,12 @@
       v-if="showPeriodoModal"
       :showModal="showPeriodoModal"
       :data="info_periodos"
+      :ano="ano_consultado"
       @close="handlePeriodoModal(false)"/>
   </div>
 </template>
 <script>
-import CronogramaPeriodo from '../Cronograma/CronogramaPeriodo.vue'
+import CronogramaPeriodo from './CronogramaPeriodo.vue'
 import helpers from '../../components/Helper'
 export default {
   name: 'PlanMinero',
@@ -129,6 +130,7 @@ export default {
       preparaciones: [],
       produccion: [],
       selectedEdit: {},
+      ano_consultado: null,
       anos_infraestructura: [],
       anos_preparaciones: [],
       anos_produccion: [],
@@ -184,6 +186,7 @@ export default {
           datos_mina: this.$store.getters.slugDatosMina
         }
       }).then((response) => {
+        this.ano_consultado = anio
         this.info_periodos = response.data
         this.handlePeriodoModal(true)
       }).catch((err) => {
