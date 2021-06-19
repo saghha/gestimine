@@ -15,7 +15,7 @@
           <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="form-group">
               <label>Item</label>
-              <v-select label="text" v-model="info.item" :options="items" :reduce="item => item.value"></v-select>
+              <v-select label="nombre" v-model="info.item" :options="items" :reduce="item => item.nombre"></v-select>
             </div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6">
@@ -116,7 +116,7 @@ export default {
     ...helpers,
     getItems: function () {
       this.$store.commit('setLoading', true)
-      axios.get('resgistro-datos/evento/items').then((response) => {
+      axios.get('registro-datos/evento/items').then((response) => {
         this.data = response.data
       }).catch((err) => {
         this.showToast({icon: 'error', title: err.response.data.message})
