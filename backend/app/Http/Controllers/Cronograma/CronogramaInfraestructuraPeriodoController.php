@@ -869,7 +869,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
-                'longitud' => $value->longitud,
+                'tronadura' => ($value->longitud/$avance_tronadura),
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values->sum('valor_desgloce_periodo'),
                 'valores' => $data_values->toArray(),
@@ -912,7 +912,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                 'nombre' => $value->nombre_infraestructura,
                 'seccion' => $value->seccion,
                 'area' => $value->area,
-                'longitud' => $value->longitud,
+                'tronadura' => ($value->longitud/$avance_tronadura),
                 'nro_tiros' => $value->nro_tiros,
                 'total_desgloce_total' => $data_values_prep->sum('valor_desgloce_periodo'),
                 'valores' => $data_values_prep->toArray(),
@@ -1595,6 +1595,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $total_desgloce = 0;
         }
         $mas = 0;
+        $array_ano = [];
         //calcula tronadura produccion
         foreach($data_produccion as $value) {
             foreach($value->valores as $value_2) {
