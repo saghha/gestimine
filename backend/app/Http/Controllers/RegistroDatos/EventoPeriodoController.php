@@ -50,6 +50,8 @@ class EventoPeriodoController extends Controller
                 'evento' => $value->evento,
                 'tipo_evento' => $value->tipo,
                 'resultado' => $value->resultado,
+                'mensaje' => $value->mensaje,
+                'mensaje' => $value->mensaje,
             ]);
         }
         return $list;
@@ -127,9 +129,9 @@ class EventoPeriodoController extends Controller
      */
     public function items(ShowEventoPeriodo $request){
         $data =  DatosMina::whereNull('deleted_at')->latest()->first();
-        $infraestructura = CronogramaInfraestructuraPeriodo::where('id_datos_mina',$data->id)->select('nombre')->get();
-        $preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina',$data->id)->select('nombre')->get();
-        $produccion = CronogramaProduccionPeriodo::where('id_datos_mina',$data->id)->select('nombre')->get();
+        $infraestructura = CronogramaInfraestructuraPeriodo::where('id_datos_mina',$data->id)->select('nombre_infraestructura AS nombre')->get();
+        $preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina',$data->id)->select('nombre_infraestructura AS nombre')->get();
+        $produccion = CronogramaProduccionPeriodo::where('id_datos_mina',$data->id)->select('nombre_produccion AS nombre')->get();
         return [
             'infraestructura' => $infraestructura,
             'preparacion' => $preparacion,
