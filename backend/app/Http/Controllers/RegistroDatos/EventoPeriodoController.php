@@ -25,6 +25,7 @@ use RuntimeException;
 use Mail;
 use App\Mail\EmergencyCallReceived;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class EventoPeriodoController extends Controller
 {
@@ -53,18 +54,27 @@ class EventoPeriodoController extends Controller
     public function store(CreateEventoPeriodo $request){
         $data = $request->validated();
         $for = User::where('email','!=',null)->get()->pluck('email')->toArray();
-        $model = $this->repository->create(Arr::only(array_merge($data, ['id_usuario' => $request->user()->id]), $this->repository->attributes()));
-        $array = [
-            'name' => $request->user()->name,
-        ];
-        $subject = "Notificacion de evento";
-        Mail::mailer('smtp')->send('mails.emergency_call',array_merge($array,$request->all()), function($msj) use($subject,$for){
-            $msj->from("mantos.cerro.verde.minera@gmail.com", "Emision Automatica de emergencia");
-            $msj->subject($subject);
-            $msj->to($for);
-        });
+        try{
+            $model = $this->repository->create(Arr::only(array_merge($data, ['id_usuario' => $request->user()->id]), $this->repository->attributes()));
+            $array = [
+                'name' => $request->user()->name,
+            ];
+            $subject = "Notificacion de evento";
+            Mail::mailer('smtp')->send('mails.emergency_call',array_merge($array,$request->all()), function($msj) use($subject,$for){
+                $msj->from("mantos.cerro.verde.minera@gmail.com", "Emision Automatica de emergencia");
+                $msj->subject($subject);
+                $msj->to($for);
+            });
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+        DB::commit();
 
-        return $model;
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Correo Enviado Exitosamente',
+        ]);
     }
 
     /**
@@ -116,6 +126,7 @@ class EventoPeriodoController extends Controller
             'infraestructura' => $infraestructura,
             'preparacion' => $preparacion,
             'produccion' => $produccion,
+            'periodo' => 1
         ];
     }
 
