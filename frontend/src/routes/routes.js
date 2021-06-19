@@ -19,6 +19,7 @@ import Test from 'src/pages/Test'
 import DatosMina from 'src/pages/DatosMina/DatosMina'
 import Cronograma from 'src/pages/Cronograma/Cronograma'
 import PlanMinero from 'src/pages/PlanMinero/PlanMinero'
+import Perforacion from 'src/pages/Perforacion/Perforacion'
 
 const routes = [
   {
@@ -74,6 +75,14 @@ const routes = [
         path: 'plan_minero',
         name: 'Plan Minero',
         component: PlanMinero,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'perforaciones',
+        name: 'Perforaciones',
+        component: Perforacion,
         meta: {
           requiresAuth: true
         }

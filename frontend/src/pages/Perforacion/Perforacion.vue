@@ -13,7 +13,7 @@
                       <b-th sticky-column>Área [mt2]</b-th>
                       <b-th sticky-column>Sección</b-th>
                       <b-th sticky-column>N° Tiros</b-th>
-                      <b-th sticky-column>Toneladas</b-th>
+                      <b-th sticky-column>Tiros Totales</b-th>
                       <b-th v-for="(anio, index_field) in anos_infraestructura" :key="index_field">
                         <div class="pointer" @click="selectValue(anio.key)">
                           {{anio.label}}
@@ -28,7 +28,7 @@
                       <b-td>{{item.area}}</b-td>
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
-                      <b-td>{{item.toneladas}}</b-td>
+                      <b-td>{{item.tiros_totales}}</b-td>
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_infraestructura" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
@@ -49,7 +49,7 @@
                       <b-th sticky-column>Área</b-th>
                       <b-th sticky-column>Sección</b-th>
                       <b-th sticky-column>N° Tiros</b-th>
-                      <b-th sticky-column>Toneladas</b-th>
+                      <b-th sticky-column>Tiros Totales</b-th>
                       <b-th v-for="(anio, index_field) in anos_preparaciones" :key="index_field">
                         <div class="pointer" @click="selectValue(anio.key)">
                           {{anio.label}}
@@ -64,7 +64,7 @@
                       <b-td>{{item.area}}</b-td>
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
-                      <b-td>{{item.toneladas}}</b-td>
+                      <b-td>{{item.tiros_totales}}</b-td>
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_preparaciones" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
@@ -117,7 +117,7 @@
 import CronogramaPeriodo from '../Cronograma/CronogramaPeriodo.vue'
 import helpers from '../../components/Helper'
 export default {
-  name: 'PlanMinero',
+  name: 'Perforaciones',
   components: {
     CronogramaPeriodo,
   },
@@ -145,7 +145,7 @@ export default {
     ...helpers,
     getCronograma: function () {
       this.$store.commit('setLoading', true)
-      axios.get('cronograma/infraestructura/mostrar-plan-mina-anual', {
+      axios.get('cronograma/infraestructura/mostrar-perforaciones-anual', {
         params: {
           datos_mina: this.$store.getters.slugDatosMina
         }
@@ -178,7 +178,7 @@ export default {
     },
     selectValue: function (anio) {
       this.$store.commit('setLoading', true)
-      axios.get('cronograma/infraestructura/mostrar-plan-mina-periodo', {
+      axios.get('cronograma/infraestructura/mostrar-perforaciones-periodo', {
         params: {
           ano: anio,
           datos_mina: this.$store.getters.slugDatosMina

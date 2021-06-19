@@ -245,7 +245,7 @@ export default {
         console.log(result)
         if(result.value) {
           console.log("confirma")
-          //this.submitEdit()
+          this.submitEdit()
         } else {
           console.log('rechaza')
         }
