@@ -445,7 +445,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             }
             array_push($data_plan_prod,[
                 'nombre' => $value->nombre_produccion,
-                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_periodo'),
                 'valores' => $data_values_prod->toArray(),
             ]);
             $data_values_prod = collect([]);
@@ -613,7 +613,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             }
             array_push($data_plan_prod,[
                 'nombre' => $value->nombre_produccion,
-                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_periodo'),
                 'valores' => $data_values_prod->toArray(),
             ]);
             $data_values_prod = collect([]);
@@ -783,7 +783,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             }
             array_push($data_plan_prod,[
                 'nombre' => $value->nombre_produccion,
-                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_periodo'),
                 'valores' => $data_values_prod->toArray(),
             ]);
             $data_values_prod = collect([]);
@@ -961,7 +961,9 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             }
             array_push($data_plan_prod,[
                 'nombre' => $value->nombre_produccion,
-                'total_desgloce_total' => $data_values_prod->sum('valor_desgloce_anual'),
+                'total_desgloce_total_tronadura' => $data_values_prod->sum('valor_desgloce_periodo_tronadura'),
+                'total_desgloce_total_carguio' => $data_values_prod->sum('valor_desgloce_periodo_carguio'),
+                'total_desgloce_total_transporte' => $data_values_prod->sum('valor_desgloce_periodo_transporte'),
                 'valores' => $data_values_prod->toArray(),
             ]);
             $data_values_prod = collect([]);
