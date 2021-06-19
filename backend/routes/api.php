@@ -68,7 +68,7 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'cronograma', 'names
 });
 Route::group(['prefix' => 'registro-datos', 'namespace' => 'RegistroDatos'], function(){
     Route::group(['prefix' => 'evento'], function(){
-        
+        Route::get('items', 'EventoPeriodoController@items');
     });
     Route::apiResource('evento', 'EventoPeriodoController');
 });

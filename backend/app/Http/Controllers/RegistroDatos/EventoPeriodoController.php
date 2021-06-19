@@ -4,7 +4,15 @@ namespace App\Http\Controllers\RegistroDatos;
 
 use Illuminate\Http\Request;
 use App\Models\RegistroDatos\EventoPeriodo;
+use App\Models\Cronograma\CronogramaInfraestructuraPeriodo;
+use App\Models\Cronograma\CronogramaPreparacionPeriodo;
+use App\Models\Cronograma\CronogramaProduccionPeriodo;
+use App\Models\DatosMina\DatosMina;
 use App\Repositories\RegistroDatos\EventoPeriodoRepository;
+use App\Repositories\Cronograma\CronogramaInfraestructuraPeriodoRepository;
+use App\Repositories\Cronograma\CronogramaPreparacionPeriodoRepository;
+use App\Repositories\Cronograma\CronogramaProduccionPeriodoRepository;
+use App\Repositories\DatosMina\DatosMinaRepository;
 use App\Http\Requests\RegistroDatos\EventoPeriodo\ShowEventoPeriodo;
 use App\Http\Requests\RegistroDatos\EventoPeriodo\CreateEventoPeriodo;
 use App\Http\Requests\RegistroDatos\EventoPeriodo\EditEventoPeriodo;
@@ -34,7 +42,7 @@ class EventoPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function index(ShowEventoPeriodo $request){
-        $data = $this->repository->queryAll()->get();
+        $data = $this->repository->queryAll()->orderBy('created_at')->get();
         return $data;
     }
 
@@ -92,6 +100,23 @@ class EventoPeriodoController extends Controller
             'status' => 'error',
             'message' => 'Ha ocurrido un error eliminando el Evento'
         ]);
+    }
+
+    /**
+     * get paged index of ShowEventoPeriodo
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function items(ShowEventoPeriodo $request){
+        $data =  DatosMina::whereNull('deleted_at')->latest()->first();
+        $infraestructura = CronogramaInfraestructuraPeriodo::where('id_datos_mina',$data->id)->select('nombre_infraestructura')->get();
+        $preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina',$data->id)->select('nombre_infraestructura')->get();
+        $produccion = CronogramaProduccionPeriodo::where('id_datos_mina',$data->id)->select('nombre_produccion')->get();
+        return [
+            'infraestructura' => $infraestructura,
+            'preparacion' => $preparacion,
+            'produccion' => $produccion,
+        ];
     }
 
 }
