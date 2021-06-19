@@ -44,7 +44,15 @@ class EventoPeriodoController extends Controller
      */
     public function index(ShowEventoPeriodo $request){
         $data = $this->repository->queryAll()->orderBy('created_at')->get();
-        return $data;
+        $list = [];
+        foreach ($data as $value) {
+            array_push($list, [
+                'evento' => $value->evento,
+                'tipo_evento' => $value->tipo,
+                'resultado' => $value->resultado,
+            ]);
+        }
+        return $list;
     }
 
     /**
@@ -119,9 +127,9 @@ class EventoPeriodoController extends Controller
      */
     public function items(ShowEventoPeriodo $request){
         $data =  DatosMina::whereNull('deleted_at')->latest()->first();
-        $infraestructura = CronogramaInfraestructuraPeriodo::where('id_datos_mina',$data->id)->select('nombre_infraestructura')->get();
-        $preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina',$data->id)->select('nombre_infraestructura')->get();
-        $produccion = CronogramaProduccionPeriodo::where('id_datos_mina',$data->id)->select('nombre_produccion')->get();
+        $infraestructura = CronogramaInfraestructuraPeriodo::where('id_datos_mina',$data->id)->select('nombre')->get();
+        $preparacion = CronogramaPreparacionPeriodo::where('id_datos_mina',$data->id)->select('nombre')->get();
+        $produccion = CronogramaProduccionPeriodo::where('id_datos_mina',$data->id)->select('nombre')->get();
         return [
             'infraestructura' => $infraestructura,
             'preparacion' => $preparacion,
