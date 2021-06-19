@@ -1595,6 +1595,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $total_desgloce = 0;
         }
         $mas = 0;
+        $array_ano = [];
         //calcula tronadura produccion
         foreach($data_produccion as $value) {
             foreach($value->valores as $value_2) {
