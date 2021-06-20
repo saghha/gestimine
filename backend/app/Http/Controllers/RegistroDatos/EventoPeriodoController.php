@@ -57,7 +57,7 @@ class EventoPeriodoController extends Controller
                 'emisor' => $value->user->name,
             ]);
         }
-        return $list;
+        return $list->paginate(20);
     }
 
     /**
