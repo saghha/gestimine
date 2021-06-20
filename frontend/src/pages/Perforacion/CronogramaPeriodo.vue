@@ -14,7 +14,7 @@
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
-                  <b-th sticky-column>Metros Totales</b-th>
+                  <b-th sticky-column>Tiros Totales</b-th>
                   <b-th v-for="(periodo, index_field) in data.periodo_infraestructura" :key="index_field">
                     {{periodo.label}}
                   </b-th>
@@ -27,7 +27,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.longitud}}</b-td>
+                  <b-td>{{item.tiros_totales}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_infraestructura" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>
@@ -51,7 +51,7 @@
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
-                  <b-th sticky-column>Metros Totales</b-th>
+                  <b-th sticky-column>Tiros Totales</b-th>
                   <b-th v-for="(periodo, index_field) in data.periodo_preparaciones" :key="index_field">
                     {{periodo.label}}
                   </b-th>
@@ -64,7 +64,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.longitud}}</b-td>
+                  <b-td>{{item.tiros_totales}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_preparaciones" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>

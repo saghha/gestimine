@@ -10,7 +10,7 @@
                   <b-thead>
                     <b-tr>
                       <b-th sticky-column>Nombre Infraestructura</b-th>
-                      <b-th sticky-column>Área</b-th>
+                      <b-th sticky-column>Área [mt2]</b-th>
                       <b-th sticky-column>Sección</b-th>
                       <b-th sticky-column>N° Tiros</b-th>
                       <b-th sticky-column>Toneladas</b-th>
@@ -32,7 +32,7 @@
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_infraestructura" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
-                      <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
+                      <b-td>{{formatAllMoney(item.total_desgloce_anual)}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -68,7 +68,7 @@
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_preparaciones" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
-                      <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
+                      <b-td>{{formatAllMoney(item.total_desgloce_anual)}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -96,7 +96,7 @@
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_produccion" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
-                      <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
+                      <b-td>{{formatAllMoney(item.total_desgloce_anual)}}</b-td>
                     </b-tr>
                   </b-tbody>
                 </b-table-simple>
@@ -110,11 +110,12 @@
       v-if="showPeriodoModal"
       :showModal="showPeriodoModal"
       :data="info_periodos"
+      :ano="ano_consultado"
       @close="handlePeriodoModal(false)"/>
   </div>
 </template>
 <script>
-import CronogramaPeriodo from '../Cronograma/CronogramaPeriodo.vue'
+import CronogramaPeriodo from './CronogramaPeriodo.vue'
 import helpers from '../../components/Helper'
 export default {
   name: 'PlanMinero',
@@ -129,6 +130,7 @@ export default {
       preparaciones: [],
       produccion: [],
       selectedEdit: {},
+      ano_consultado: null,
       anos_infraestructura: [],
       anos_preparaciones: [],
       anos_produccion: [],
@@ -184,6 +186,7 @@ export default {
           datos_mina: this.$store.getters.slugDatosMina
         }
       }).then((response) => {
+        this.ano_consultado = anio
         this.info_periodos = response.data
         this.handlePeriodoModal(true)
       }).catch((err) => {

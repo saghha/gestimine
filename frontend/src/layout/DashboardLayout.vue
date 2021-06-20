@@ -18,23 +18,23 @@
         <i class="nc-icon nc-notes"></i>
         <p>Plan Minero</p>
       </sidebar-link>
-      <sidebar-link to="/admin/typography">
+      <sidebar-link to="/admin/perforaciones">
         <i class="nc-icon nc-paper-2"></i>
         <p>Perforación</p>
       </sidebar-link>
-      <sidebar-link to="/admin/icons">
+      <sidebar-link to="/admin/tronaduras">
         <i class="nc-icon nc-atom"></i>
         <p>Tronadura</p>
       </sidebar-link>
-      <sidebar-link to="/admin/maps">
+      <sidebar-link to="/admin/carguios">
         <i class="nc-icon nc-pin-3"></i>
-        <p>Cargio</p>
+        <p>Carguío</p>
       </sidebar-link>
-      <sidebar-link to="/admin/notifications">
+      <sidebar-link to="/admin/transportes">
         <i class="nc-icon nc-bell-55"></i>
         <p>Transporte</p>
       </sidebar-link>
-      <sidebar-link to="/admin/notifications">
+      <sidebar-link to="/admin/alertas">
         <i class="nc-icon nc-bell-55"></i>
         <p>Alertas</p>
       </sidebar-link>

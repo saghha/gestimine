@@ -19,6 +19,11 @@ import Test from 'src/pages/Test'
 import DatosMina from 'src/pages/DatosMina/DatosMina'
 import Cronograma from 'src/pages/Cronograma/Cronograma'
 import PlanMinero from 'src/pages/PlanMinero/PlanMinero'
+import Perforacion from 'src/pages/Perforacion/Perforacion'
+import Tronaduras from 'src/pages/Tronadura/Tronadura'
+import Carguios from 'src/pages/Carguio/Carguio'
+import Transporte from 'src/pages/Transporte/Transporte'
+import Alerta from 'src/pages/Alertas/EnviarAlerta'
 
 const routes = [
   {
@@ -74,6 +79,46 @@ const routes = [
         path: 'plan_minero',
         name: 'Plan Minero',
         component: PlanMinero,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'perforaciones',
+        name: 'Perforaciones',
+        component: Perforacion,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'tronaduras',
+        name: 'Tronaduras',
+        component: Tronaduras,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'carguios',
+        name: 'Cargios',
+        component: Carguios,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'transportes',
+        name: 'Transporte',
+        component: Transporte,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'alertas',
+        name: 'Alerta',
+        component: Alerta,
         meta: {
           requiresAuth: true
         }

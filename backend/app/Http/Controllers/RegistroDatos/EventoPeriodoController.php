@@ -70,11 +70,13 @@ class EventoPeriodoController extends Controller
                 'name' => $request->user()->name,
             ];
             $subject = "Notificacion de evento";
-            Mail::mailer('smtp')->send('mails.emergency_call',array_merge($array,$request->all()), function($msj) use($subject,$for){
-                $msj->from("mantos.cerro.verde.minera@gmail.com", "Emision Automatica de emergencia");
-                $msj->subject($subject);
-                $msj->to($for);
-            });
+            // Mail::mailer('smtp')->send('mails.emergency_call',array_merge($array,$request->all()), function($msj) use($subject,$for){
+            //     $msj->from("mantos.cerro.verde.minera@gmail.com", "Emision Automatica de emergencia");
+            //     $msj->subject($subject);
+            //     $msj->to($for);
+            // });
+            $data_mail = array_merge($array,$request->all());
+            Mail::to($for)->send(new EmergencyCallReceived($data_mail));
         } catch (\Throwable $th) {
             DB::rollback();
             throw $th;

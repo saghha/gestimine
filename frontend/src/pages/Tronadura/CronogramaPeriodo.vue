@@ -14,7 +14,7 @@
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
-                  <b-th sticky-column>Metros Totales</b-th>
+                  <b-th sticky-column>Toneladas</b-th>
                   <b-th v-for="(periodo, index_field) in data.periodo_infraestructura" :key="index_field">
                     {{periodo.label}}
                   </b-th>
@@ -27,7 +27,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.longitud}}</b-td>
+                  <b-td>{{item.tronadura}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_infraestructura" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>
@@ -51,7 +51,7 @@
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
-                  <b-th sticky-column>Metros Totales</b-th>
+                  <b-th sticky-column>Toneladas</b-th>
                   <b-th v-for="(periodo, index_field) in data.periodo_preparaciones" :key="index_field">
                     {{periodo.label}}
                   </b-th>
@@ -64,7 +64,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.longitud}}</b-td>
+                  <b-td>{{item.tronadura}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_preparaciones" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>
@@ -95,9 +95,9 @@
                 <b-tr v-for="(item, index_item) in data.produccion" :key="index_item">
                   <b-td>{{item.nombre}}</b-td >
                   <b-td class="text-left" v-for="(value_ano, index_ano) in data.periodo_produccion" :key="index_ano">
-                    {{mostrarValor(value_ano, item)}}
+                    {{mostrarValorProd(value_ano, item)}}
                   </b-td>
-                  <b-td>{{formatAllMoney(item.total_desgloce_total)}}</b-td>
+                  <b-td>{{formatAllMoney(item.total_desgloce_total_tronadura)}}</b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
@@ -146,6 +146,16 @@ export default {
       console.log(data)
       if(!!data) {
         return this.formatAllMoney(data.valor_desgloce_periodo)
+      } else {
+        return 0
+      }
+    },
+    mostrarValorProd: function (value_ano, item) {
+      console.log(value_ano, item)
+      var data = _.find(item.valores, (value, index) => {return value_ano.key == index})
+      console.log(data)
+      if(!!data) {
+        return this.formatAllMoney(data.total_desgloce_total_tronadura)
       } else {
         return 0
       }
