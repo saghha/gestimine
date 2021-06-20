@@ -115,4 +115,12 @@ class EventoPeriodo extends Model
 	public function getSlugAttribute(){
         return $this->slug();
     }
+
+    /**
+     * the User related to the model
+     * @return BelongsTo
+     */
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id');
+    }
 }
