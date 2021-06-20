@@ -46,11 +46,11 @@ class EventoPeriodoController extends Controller
         $data = $this->repository->queryAll()->orderBy('created_at')->get();
         $list = [];
         foreach ($data as $value) {
+            $fecha_ev = 
             array_push($list, [
                 'evento' => $value->evento,
                 'tipo_evento' => $value->tipo,
                 'resultado' => $value->resultado,
-                'mensaje' => $value->mensaje,
                 'mensaje' => $value->mensaje,
             ]);
         }
