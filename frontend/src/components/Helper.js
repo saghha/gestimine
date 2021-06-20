@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from 'moment'
 export default {
     calcularDigitoVerificador (rut) {
         var rut_inverso = String(rut).split("").reverse()
@@ -60,4 +61,11 @@ export default {
             allowEnterKey: true
         })
     },
+    formatDate (date) {
+        if(moment(date, 'DD/MM/YYYY').isValid()) {
+            return date
+        } else {
+            return moment(date).format('DD/MM/YYYY').toString()
+        }
+    }
 }

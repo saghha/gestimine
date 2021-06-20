@@ -24,6 +24,7 @@ import Tronaduras from 'src/pages/Tronadura/Tronadura'
 import Carguios from 'src/pages/Carguio/Carguio'
 import Transporte from 'src/pages/Transporte/Transporte'
 import Alerta from 'src/pages/Alertas/EnviarAlerta'
+import ListEvents from 'src/pages/Evento/Evento'
 
 const routes = [
   {
@@ -119,6 +120,14 @@ const routes = [
         path: 'alertas',
         name: 'Alerta',
         component: Alerta,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'eventos',
+        name: 'ListEvents',
+        component: ListEvents,
         meta: {
           requiresAuth: true
         }
