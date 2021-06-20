@@ -43,21 +43,21 @@ class EventoPeriodoController extends Controller
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function index(ShowEventoPeriodo $request){
-        $data = $this->repository->queryAll()->orderBy('created_at')->get()->load('user');
-        $list = [];
-        foreach ($data as $value) {
-            $fecha_ev = new Carbon($value->fecha);
-            $emisor = 
-            array_push($list, [
-                'evento' => $value->evento,
-                'tipo_evento' => $value->tipo,
-                'resultado' => $value->resultado,
-                'mensaje' => $value->mensaje,
-                'fecha' => $fecha_ev->format('d/m/Y'),
-                'emisor' => $value->user->name,
-            ]);
-        }
-        return $list->paginate(20);
+        return $this->repository->queryAll()->with(['user'])->orderBy('created_at')->paginate(20);
+        // $list = collect([]);
+        // foreach ($data as $value) {
+        //     $fecha_ev = new Carbon($value->fecha);
+        //     $emisor = 
+        //     $list->push([
+        //         'evento' => $value->evento,
+        //         'tipo_evento' => $value->tipo,
+        //         'resultado' => $value->resultado,
+        //         'mensaje' => $value->mensaje,
+        //         'fecha' => $fecha_ev->format('d/m/Y'),
+        //         'emisor' => $value->user->name,
+        //     ]);
+        // }
+        // return $list->paginate(20);
     }
 
     /**
