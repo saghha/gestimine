@@ -18,9 +18,9 @@ class EmergencyCallReceived extends Mailable
      *
      * @return void
      */
-    public function __construct(DistressCall $distressCall)
+    public function __construct($data_mail)
     {
-        $this->distressCall = $distressCall;
+        $this->distressCall = $data_mail;
     }
 
     /**
@@ -30,6 +30,6 @@ class EmergencyCallReceived extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.emergency_call');
+        return $this->view('mails.emergency_call')->with($this->distressCall);
     }
 }

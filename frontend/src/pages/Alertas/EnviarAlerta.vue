@@ -57,6 +57,7 @@
 </template>
 <script>
 import helpers from '../../components/Helper'
+import moment from 'moment'
 export default {
   name: 'Alertas',
   data () {
@@ -86,7 +87,9 @@ export default {
         {text: 'Ambiental', value: 'ambiental', resultados: ['Derrame Ácido', 'Derrame de combustible', 'Polución', 'Gases Tóxicos']},
       ],
       info: {
-        resultado: null
+        resultado: null,
+        item: null,
+        observaciones: null
       }
     }
   },
@@ -163,7 +166,23 @@ export default {
     },
     sendEmail: function () {
       this.$store.commit('setLoading', true)
-      axios.post('')
+      var data = {
+        "operacion_infraestructura": "OPERACION 1",
+        "periodo": this.data.periodo,
+        "ano": moment().format('YYYY').toString(),
+        "fecha": moment().format('DD/MM/YYYY').toString(),
+        "evento": this.btn_selected,
+        "tipo": this.info.seccion,
+        "resultado": this.info.resultado,
+        "mensaje": this.info.observaciones
+      }
+      axios.post('registro-datos/evento', data).then((response) => {
+        this.showToast({icon: 'success', title: 'Correo de alerta enviado'})
+      }).catch((err) => {
+        this.showToast({icon: 'error', title: err.response.data.message})
+      }).finally(() => {
+        this.$store.commit('setLoading', false)
+      })
     }
   }
 }
