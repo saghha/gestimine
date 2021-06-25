@@ -7,39 +7,39 @@
         <p>Dashboard</p>
       </sidebar-link>
       <sidebar-link to="/admin/datos_mina">
-        <i class="nc-icon nc-chart-pie-35"></i>
+        <i class="nc-icon nc-preferences-circle-rotate"></i>
         <p>Datos de Mina</p>
       </sidebar-link>
       <sidebar-link to="/admin/cronograma">
-        <i class="nc-icon nc-circle-09"></i>
+        <i class="nc-icon nc-notes"></i>
         <p>Cronograma</p>
       </sidebar-link>
       <sidebar-link to="/admin/plan_minero">
-        <i class="nc-icon nc-notes"></i>
+        <i class="nc-icon nc-chart-bar-32"></i>
         <p>Plan Minero</p>
       </sidebar-link>
       <sidebar-link to="/admin/perforaciones">
-        <i class="nc-icon nc-paper-2"></i>
+        <i class="nc-icon nc-circle"></i>
         <p>Perforación</p>
       </sidebar-link>
       <sidebar-link to="/admin/tronaduras">
-        <i class="nc-icon nc-atom"></i>
+        <i class="nc-icon nc-explore-2"></i>
         <p>Tronadura</p>
       </sidebar-link>
       <sidebar-link to="/admin/carguios">
-        <i class="nc-icon nc-pin-3"></i>
+        <i class="nc-icon nc-app"></i>
         <p>Carguío</p>
       </sidebar-link>
       <sidebar-link to="/admin/transportes">
-        <i class="nc-icon nc-bell-55"></i>
+        <i class="nc-icon nc-delivery-fast"></i>
         <p>Transporte</p>
       </sidebar-link>
       <sidebar-link to="/admin/alertas">
-        <i class="nc-icon nc-bell-55"></i>
+        <i class="fa fa-warning"></i>
         <p>Alertas</p>
       </sidebar-link>
       <sidebar-link to="/admin/eventos">
-        <i class="nc-icon nc-bell-55"></i>
+        <i class="nc-icon nc-bullet-list-67"></i>
         <p>Ver Eventos</p>
       </sidebar-link>
     </side-bar>
