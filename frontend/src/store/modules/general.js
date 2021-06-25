@@ -69,7 +69,24 @@ const actions = {
                 }
             } else {
                 console.log("los tengo en mi store")
-                resolve()
+                if(!!window.localStorage.getItem('slugDatosMina')) {
+                    var slug = window.localStorage.getItem('slugDatosMina')
+                    commit('setDatosMina', slug)
+                    resolve()
+                } else {
+                    Axios.get('datos-mina/ultimo', {
+                        headers: {
+                            'Authorization': 'Bearer ' + state.token
+                        }
+                    }).then((response) => {
+                        window.localStorage.setItem('slugDatosMina', response.data.slug)
+                        commit('setDatosMina', response.data.slug)
+                    }).catch((err) => {
+                        console.log(err)
+                    }).finally(() => {
+                        resolve()
+                    })
+                }
             }
         })
     },
