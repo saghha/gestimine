@@ -63,9 +63,10 @@ extend('rut', rutValidator)
 Object.keys(rules).forEach(rule => {
   extend(rule, rules[rule]);
 });
-//axios.defaults.baseURL = 'http://localhost/public/api'
-axios.defaults.baseURL = 'http://localhost/api'
-console.log(axios.defaults.baseURL)
+console.log(process.env.VUE_APP_API_HOST)
+axios.defaults.baseURL = process.env.VUE_APP_API_HOST
+// axios.defaults.baseURL = 'http://localhost/api'
+// console.log(axios.defaults.baseURL)
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
@@ -80,7 +81,7 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   store.dispatch('authenticate').then(() => {
-    console.log("aca deberia ser resolve")
+    // console.log("aca deberia ser resolve")
     axios.defaults.headers.common = {
       'X-Requested-With': 'XMLHttpRequest',
       'Authorization': 'Bearer ' + store.getters.token
@@ -92,7 +93,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
   }).catch((err) =>{
-    console.log("aca deberia ser reject")
+    // console.log("aca deberia ser reject")
     if(to.matched.some(record => record.meta.requiresAuth)){
       next('/auth/login')
     } else {

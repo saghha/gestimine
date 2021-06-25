@@ -22,6 +22,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "register-service-worker": "^1.5.2",
+    "telnet-client": "^1.4.9",
     "v-tooltip": "^2.0.0-rc.33",
     "vee-validate": "^3.3.7",
     "vue": "^2.6.12",
