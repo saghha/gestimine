@@ -51,8 +51,6 @@ RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
 RUN pecl install redis \
     && docker-php-ext-enable redis
-RUN pecl install decimal \
-    && docker-php-ext-enable decimal
 RUN pecl install imagick
 RUN docker-php-ext-enable imagick
 

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class CronogramaInfraestructuraPeriodo extends Model
 {
@@ -61,17 +60,17 @@ class CronogramaInfraestructuraPeriodo extends Model
      */
     protected $casts = [
         'id_datos_mina' => 'integer',
-        'area' => DecimalCast::class,
-        'longitud' => DecimalCast::class,
+        'area' => 'float',
+        'longitud' => 'float',
         'periodo' => 'integer',
         'ano' => 'integer',
-        'total_desgloce' => DecimalCast::class,
-        'densidad_esteril' => DecimalCast::class,
-        'ley_diluida' => DecimalCast::class,
-        'ley_mineral' => DecimalCast::class,
-        'ley_esteril' => DecimalCast::class,
-        'densidad_dilucion' => DecimalCast::class,
-        'densidad_mineral' => DecimalCast::class,
+        'total_desgloce' => 'float',
+        'densidad_esteril' => 'float',
+        'ley_diluida' => 'float',
+        'ley_mineral' => 'float',
+        'ley_esteril' => 'float',
+        'densidad_dilucion' => 'float',
+        'densidad_mineral' => 'float',
         'nro_tiros' => 'integer',
     ];
 

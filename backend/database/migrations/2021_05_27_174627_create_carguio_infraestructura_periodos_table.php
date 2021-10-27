@@ -19,12 +19,12 @@ class CreateCarguioInfraestructuraPeriodosTable extends Migration
             $table->integer('periodo')->nullable();
             $table->integer('ano')->nullable();
             $table->boolean('termino')->default(false);
-            $table->decimal('registro_desgloce_carguio',15,2)->default(0.00);
-            $table->decimal('valor_carguio',15,2)->default(0.00);
-            $table->decimal('total_carguio',15,2)->default(0.00);
-            $table->decimal('registro_desgloce_total',15,2)->default(0.00);
-            $table->decimal('valor_total',15,2)->default(0.00);
-            $table->decimal('total_total',15,2)->default(0.00);
+            $table->float('registro_desgloce_carguio',15,2)->default(0.00);
+            $table->float('valor_carguio',15,2)->default(0.00);
+            $table->float('total_carguio',15,2)->default(0.00);
+            $table->float('registro_desgloce_total',15,2)->default(0.00);
+            $table->float('valor_total',15,2)->default(0.00);
+            $table->float('total_total',15,2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });

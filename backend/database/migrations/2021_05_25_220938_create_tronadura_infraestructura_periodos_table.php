@@ -19,9 +19,9 @@ class CreateTronaduraInfraestructuraPeriodosTable extends Migration
             $table->integer('periodo')->nullable();
             $table->integer('ano')->nullable();
             $table->boolean('termino')->default(false);
-            $table->decimal('registro_desgloce',15,2)->default(0.00);
-            $table->decimal('valor_tronadura',15,2)->default(0.00);
-            $table->decimal('total_tronadura',15,2)->default(0.00);
+            $table->float('registro_desgloce',15,2)->default(0.00);
+            $table->float('valor_tronadura',15,2)->default(0.00);
+            $table->float('total_tronadura',15,2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });

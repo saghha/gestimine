@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class TareasPerforacionInfraestructuraPeriodo extends Model
 {
@@ -59,7 +58,7 @@ class TareasPerforacionInfraestructuraPeriodo extends Model
         'turno' => 'integer',
         'termino' => 'boolean',
         'orden' => 'integer',
-        'porcentaje_avance' => DecimalCast::class
+        'porcentaje_avance' => 'float'
     ];
 
     /**

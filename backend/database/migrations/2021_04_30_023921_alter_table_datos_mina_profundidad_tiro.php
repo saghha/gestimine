@@ -14,7 +14,7 @@ class AlterTableDatosMinaProfundidadTiro extends Migration
     public function up()
     {
         Schema::table('datos_minas', function (Blueprint $table) {
-            $table->decimal('profundidad_tiro',15,2)->default(0.00);
+            $table->float('profundidad_tiro',15,2)->default(0.00);
         });
     }
 

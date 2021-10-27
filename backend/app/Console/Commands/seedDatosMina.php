@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\DatosMina\DatosMina;
-use Decimal\Decimal;
 use \Carbon\Carbon;
 
 class seedDatosMina extends Command
@@ -41,7 +40,7 @@ class seedDatosMina extends Command
     public function handle()
     {
         $this->info("Creando Datos Mina Inicial");
-        $value = new Decimal((string)0.00);
+        $value = 0.00;
         $tiempo = Carbon::now();
         $activo = DatosMina::updateOrCreate([
             'id_usuario' => intval($this->argument('arg')),

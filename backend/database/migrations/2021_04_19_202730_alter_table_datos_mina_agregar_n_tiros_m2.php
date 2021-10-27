@@ -14,7 +14,7 @@ class AlterTableDatosMinaAgregarNTirosM2 extends Migration
     public function up()
     {
         Schema::table('datos_minas', function (Blueprint $table) {
-            $table->decimal('tiros_por_m2',15,2)->default(0.00);
+            $table->float('tiros_por_m2',15,2)->default(0.00);
         });
     }
 

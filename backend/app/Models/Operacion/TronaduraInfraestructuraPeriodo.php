@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class TronaduraInfraestructuraPeriodo extends Model
 {
@@ -56,9 +55,9 @@ class TronaduraInfraestructuraPeriodo extends Model
         'periodo' => 'integer',
         'ano' => 'integer',
         'termino' => 'boolean',
-        'registro_desgloce' => DecimalCast::class,
-        'valor_tronadura' => DecimalCast::class,
-        'total_tronadura' => DecimalCast::class
+        'registro_desgloce' => 'float',
+        'valor_tronadura' => 'float',
+        'total_tronadura' => 'float'
     ];
 
     /**

@@ -25,6 +25,11 @@ import Carguios from 'src/pages/Carguio/Carguio'
 import Transporte from 'src/pages/Transporte/Transporte'
 import Alerta from 'src/pages/Alertas/EnviarAlerta'
 import ListEvents from 'src/pages/Evento/Evento'
+// supervisor Page
+import TurnoAnteriorJefeTurno from 'src/pages/TurnoAnterior/JefeTurno'
+import TrabajoOperador from 'src/pages/TrabajoRealizar/Operador'
+import TrabajoJefeTurno from 'src/pages/TrabajoRealizar/JefeTurno'
+import Registro from 'src/pages/RegistroAvance/Registro'
 
 const routes = [
   {
@@ -193,6 +198,59 @@ const routes = [
         name: 'Upgrade to PRO',
         component: Upgrade
       }
+    ]
+  },
+  {
+    path: '/turno_anterior',
+    component: DashboardLayout,
+    redirect: '/admin/overview',
+    children: [
+      {
+        path: 'jefe_turno',
+        name: 'JefeTurno',
+        component: TurnoAnteriorJefeTurno,
+        meta: {
+          requiresAuth: true
+        }
+      },
+    ]
+  },
+  {
+    path: '/registro_avance',
+    component: DashboardLayout,
+    redirect: '/admin/overview',
+    children: [
+      {
+        path: 'registro',
+        name: 'Registro',
+        component: Registro,
+        meta: {
+          requiresAuth: true
+        }
+      },
+    ]
+  },
+  {
+    path: '/tarea_realizar',
+    component: DashboardLayout,
+    redirect: '/admin/overview',
+    children: [
+      {
+        path: 'operador',
+        name: 'TrabajoOperador',
+        component: TrabajoOperador,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'jefe_turno',
+        name: 'TrabajoJefeTurno',
+        component: TrabajoJefeTurno,
+        meta: {
+          requiresAuth: true
+        }
+      },
     ]
   },
   { path: '*', component: NotFound }

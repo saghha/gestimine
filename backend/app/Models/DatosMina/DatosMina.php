@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class DatosMina extends Model
 {
@@ -73,19 +72,19 @@ class DatosMina extends Model
         'meses_por_periodo' => 'integer',
         'dias_por_mes' => 'integer',
         'turnos_por_dia' => 'integer',
-        'avance_tronadura' => DecimalCast::class,
-        'toneladas_incorporadas_tronadura' => DecimalCast::class,
-        'ritmo_extraccion' => DecimalCast::class,
-        'mineral_recuperado_modulo' => DecimalCast::class,
-        'mineral_recuperado_pilares' => DecimalCast::class,
-        'densidad_esteril' => DecimalCast::class,
-        'densidad_mineral' => DecimalCast::class,
-        'densidad_dilusion' => DecimalCast::class,
-        'ley_esteril' => DecimalCast::class,
-        'ley_mineral' => DecimalCast::class,
-        'ley_diluida' => DecimalCast::class,
-        'tiros_por_m2' => DecimalCast::class,
-        'profundidad_tiro' => DecimalCast::class
+        'avance_tronadura' => 'float',
+        'toneladas_incorporadas_tronadura' => 'float',
+        'ritmo_extraccion' => 'float',
+        'mineral_recuperado_modulo' => 'float',
+        'mineral_recuperado_pilares' => 'float',
+        'densidad_esteril' => 'float',
+        'densidad_mineral' => 'float',
+        'densidad_dilusion' => 'float',
+        'ley_esteril' => 'float',
+        'ley_mineral' => 'float',
+        'ley_diluida' => 'float',
+        'tiros_por_m2' => 'float',
+        'profundidad_tiro' => 'float'
     ];
 
     /**

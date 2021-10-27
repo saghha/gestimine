@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class PerforacionInfraestructuraPeriodo extends Model
 {
@@ -56,9 +55,9 @@ class PerforacionInfraestructuraPeriodo extends Model
         'periodo' => 'integer',
         'ano' => 'integer',
         'termino' => 'boolean',
-        'registro_desgloce' => DecimalCast::class,
-        'valor_perforacion' => DecimalCast::class,
-        'total_perforacion' => DecimalCast::class
+        'registro_desgloce' => 'float',
+        'valor_perforacion' => 'float',
+        'total_perforacion' => 'float'
     ];
 
     /**

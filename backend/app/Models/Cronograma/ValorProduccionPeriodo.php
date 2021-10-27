@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class ValorProduccionPeriodo extends Model
 {
@@ -56,11 +55,11 @@ class ValorProduccionPeriodo extends Model
         'id_produccion' => 'integer',
         'periodo' => 'integer',
         'ano' => 'integer',
-        'valor_desgloce' => DecimalCast::class,
-        'valor_desgloce_perforacion' => DecimalCast::class,
-        'valor_desgloce_carguio' => DecimalCast::class,
-        'valor_desgloce_tronadura' => DecimalCast::class,
-        'valor_desgloce_transporte' => DecimalCast::class,
+        'valor_desgloce' => 'float',
+        'valor_desgloce_perforacion' => 'float',
+        'valor_desgloce_carguio' => 'float',
+        'valor_desgloce_tronadura' => 'float',
+        'valor_desgloce_transporte' => 'float',
     ];
 
     /**

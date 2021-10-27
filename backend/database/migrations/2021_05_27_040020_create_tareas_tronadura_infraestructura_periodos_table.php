@@ -22,7 +22,7 @@ class CreateTareasTronaduraInfraestructuraPeriodosTable extends Migration
             $table->boolean('termino')->default(false);
             $table->integer('orden')->nullable();
             $table->string('nombre_tarea')->nullable();
-            $table->decimal('porcentaje_avance',15,2)->default(0.00);
+            $table->float('porcentaje_avance',15,2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });

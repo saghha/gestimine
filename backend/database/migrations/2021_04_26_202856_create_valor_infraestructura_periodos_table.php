@@ -18,7 +18,7 @@ class CreateValorInfraestructuraPeriodosTable extends Migration
             $table->unsignedBigInteger('id_infraestructura');
             $table->integer('periodo')->nullable();
             $table->integer('ano')->nullable();
-            $table->decimal('valor_desgloce',15,2)->default(0.00);
+            $table->float('valor_desgloce',15,2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });

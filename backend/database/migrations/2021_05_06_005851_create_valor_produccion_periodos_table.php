@@ -18,11 +18,11 @@ class CreateValorProduccionPeriodosTable extends Migration
             $table->unsignedBigInteger('id_produccion');
             $table->integer('periodo')->nullable();
             $table->integer('ano')->nullable();
-            $table->decimal('valor_desgloce',15,2)->default(0.00);
-            $table->decimal('valor_desgloce_perforacion',15,2)->default(0.00);
-            $table->decimal('valor_desgloce_carguio',15,2)->default(0.00);
-            $table->decimal('valor_desgloce_tronadura',15,2)->default(0.00);
-            $table->decimal('valor_desgloce_transporte',15,2)->default(0.00);
+            $table->float('valor_desgloce',15,2)->default(0.00);
+            $table->float('valor_desgloce_perforacion',15,2)->default(0.00);
+            $table->float('valor_desgloce_carguio',15,2)->default(0.00);
+            $table->float('valor_desgloce_tronadura',15,2)->default(0.00);
+            $table->float('valor_desgloce_transporte',15,2)->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Balping\HashSlug\HasHashSlug;
 use Illuminate\Validation\Rule;
-use App\Casts\DecimalCast;
 
 class CarguioInfraestructuraPeriodo extends Model
 {
@@ -59,12 +58,12 @@ class CarguioInfraestructuraPeriodo extends Model
         'periodo' => 'integer',
         'ano' => 'integer',
         'termino' => 'boolean',
-        'registro_desgloce_carguio' => DecimalCast::class,
-        'valor_carguio' => DecimalCast::class,
-        'total_carguio' => DecimalCast::class,
-        'registro_desgloce_total' => DecimalCast::class,
-        'valor_total' => DecimalCast::class,
-        'total_total' => DecimalCast::class
+        'registro_desgloce_carguio' => 'float',
+        'valor_carguio' => 'float',
+        'total_carguio' => 'float',
+        'registro_desgloce_total' => 'float',
+        'valor_total' => 'float',
+        'total_total' => 'float'
     ];
 
     /**
