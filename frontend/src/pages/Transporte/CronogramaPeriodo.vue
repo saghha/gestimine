@@ -10,7 +10,7 @@
             <b-table-simple hover small caption-top responsive>
               <b-thead>
                 <b-tr>
-                  <b-th sticky-column>Nombre Infraestructura</b-th>
+                  <b-th sticky-column>Nombre de estructura</b-th>
                   <b-th sticky-column>Área</b-th>
                   <b-th sticky-column>Sección</b-th>
                   <b-th sticky-column>N° Tiros</b-th>
@@ -27,7 +27,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.tronadura}}</b-td>
+                  <b-td>{{item.toneladas}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_infraestructura" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>
@@ -64,7 +64,7 @@
                   <b-td>{{item.area}}</b-td>
                   <b-td>{{item.seccion}}</b-td>
                   <b-td>{{item.nro_tiros}}</b-td>
-                  <b-td>{{item.tronadura}}</b-td>
+                  <b-td>{{item.toneladas}}</b-td>
                   <b-td class="text-center" v-for="(value_ano, index_ano) in data.periodo_preparaciones" :key="index_ano">
                     {{mostrarValor(value_ano, item)}}
                   </b-td>

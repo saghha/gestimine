@@ -12,6 +12,7 @@
                             <b-tr>
                                 <b-th sticky-column style='background-color: gray;color:white'>Estructura</b-th>
                                 <b-th sticky-column style='background-color: gray;color:white'>Tareas Intermedias</b-th>
+                                <b-th sticky-column style='background-color: gray;color:white'></b-th>
                                 <b-th sticky-column style='background-color: gray;color:white'>Acciones</b-th>
                             </b-tr>
                         </b-thead>
@@ -19,7 +20,8 @@
                             <b-tr v-for="(item, index_item) in data" :key="index_item">
                             <b-td style='color:white'>{{item.estructura}}</b-td>
                             <b-td style='color:white'>{{item.tarea_intermedia}}: {{item.valor_tarea_intermedia}}%</b-td>
-                            <b-td style='color:white'><b-button variant="warning" @click="selectItem()" >BOTON</b-button></b-td>
+                            <b-td style='color:white'><b-button variant="info" @click="selectItem()" align="rigth">Actualizar</b-button></b-td>
+                            <b-td style='color:white'><b-button variant="warning" @click="selectItem()" >Terminar Tarea</b-button></b-td>
                             </b-tr>
                         </b-tbody>
                     </b-table-simple>

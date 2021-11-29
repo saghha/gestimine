@@ -1192,10 +1192,6 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                         'ano' => $ano,
                         'valor_desgloce_anual' => $valor_desgloce_t*($value->area*$value->densidad_esteril),
                     ]);
-                    $data_values->put($ano, [
-                        'ano' => $ano,
-                        'valor_desgloce_anual' => $valor_desgloce_t,
-                    ]);
                     if(!in_array($ano, $array_ano)){
                         array_push($anos_infra, [
                             'key' => $ano,
@@ -1517,6 +1513,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             foreach($value->valores as $value_2) {
                 if($data_values->has($value_2->ano)) {
                     $ano = $data_values[$value_2->ano]['ano'];
+                    //$value_2->valor_desgloce*($value->area*$value->densidad_esteril);
                     $valor_desgloce_t = $data_values[$value_2->ano]['valor_desgloce_anual'] + ($value_2->valor_desgloce/$avance_tronadura);
                     $data_values->put($ano, [
                         'ano' => $ano,
@@ -1570,6 +1567,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
                     $data_values_prep->put($ano, [
                         'ano' => $ano,
                         'valor_desgloce_anual' => ($valor_desgloce_t/$avance_tronadura),
+                        //$valor_desgloce_t*($value->area*$value->densidad_esteril),
                     ]);
                     if(!in_array($ano, $array_ano)){
                         array_push($anos_prep, [

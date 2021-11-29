@@ -9,7 +9,7 @@
                 <b-table-simple hover small caption-top responsive>
                   <b-thead>
                     <b-tr>
-                      <b-th sticky-column>Nombre Infraestructura</b-th>
+                      <b-th sticky-column>Nombre de estructura</b-th>
                       <b-th sticky-column>Área [mt2]</b-th>
                       <b-th sticky-column>Sección</b-th>
                       <b-th sticky-column>N° Tiros</b-th>
@@ -28,7 +28,7 @@
                       <b-td>{{item.area}}</b-td>
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
-                      <b-td>{{item.tronadura}}</b-td>
+                      <b-td>{{item.toneladas}}</b-td>
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_infraestructura" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
@@ -64,7 +64,7 @@
                       <b-td>{{item.area}}</b-td>
                       <b-td>{{item.seccion}}</b-td>
                       <b-td>{{item.nro_tiros}}</b-td>
-                      <b-td>{{item.tronadura}}</b-td>
+                      <b-td>{{item.toneladas}}</b-td>
                       <b-td class="text-center" v-for="(value_ano, index_ano) in anos_preparaciones" :key="index_ano">
                         {{mostrarValor(value_ano, item)}}
                       </b-td>
@@ -147,7 +147,7 @@ export default {
     ...helpers,
     getCronograma: function () {
       this.$store.commit('setLoading', true)
-      axios.get('cronograma/infraestructura/mostrar-tronaduras-anual', {
+      axios.get('cronograma/infraestructura/mostrar-plan-mina-anual', {
         params: {
           datos_mina: this.$store.getters.slugDatosMina
         }
@@ -180,7 +180,7 @@ export default {
     },
     selectValue: function (anio) {
       this.$store.commit('setLoading', true)
-      axios.get('cronograma/infraestructura/mostrar-tronaduras-periodo', {
+      axios.get('cronograma/infraestructura/mostrar-plan-mina-periodo', {
         params: {
           ano: anio,
           datos_mina: this.$store.getters.slugDatosMina

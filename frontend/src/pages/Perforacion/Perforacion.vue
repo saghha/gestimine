@@ -9,7 +9,7 @@
                 <b-table-simple hover small caption-top responsive>
                   <b-thead>
                     <b-tr>
-                      <b-th sticky-column>Nombre Infraestructura</b-th>
+                      <b-th sticky-column>Nombre de estructura</b-th>
                       <b-th sticky-column>Área [mt2]</b-th>
                       <b-th sticky-column>Sección</b-th>
                       <b-th sticky-column>N° Tiros</b-th>
