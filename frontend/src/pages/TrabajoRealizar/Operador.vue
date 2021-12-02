@@ -5,7 +5,8 @@
         <div class="col-12" style="color:white" align="center">
             <div><h4>Trabajo A Realizar Operador: Abraham Collao Llanquel</h4></div>
             <div>
-              <h3>Tareas Asignadas Al Turno [1] Periodo [23]</h3>
+              <h3>Tareas Asignadas Al Turno [1] Periodo [23] (DEMO)</h3>
+              <h3>Asignacion: <span style="color:green">Infraestructuras</span></h3>
             </div>
             <div>Fecha Actual: 02/10/2012</div>
             <div class="col-12 center">
