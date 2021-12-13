@@ -454,11 +454,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->toArray(),
+            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
+            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->toArray()
+            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->values()->all()
         ];
     }
 
@@ -622,11 +622,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->toArray(),
+            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
+            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->toArray()
+            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->values()->all()
         ];
     }
 
@@ -792,11 +792,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->toArray(),
+            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
+            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->toArray()
+            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->values()->all()
         ];
     }
 /////////////////////////////////////////////////////////////////////////////
@@ -972,11 +972,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->toArray(),
+            'periodo_infraestructura' => collect($periodo_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
+            'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->toArray()
+            'periodo_produccion' => collect($periodo_prod)->sortBy('key')->values()->all()
         ];
     }
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1135,11 +1135,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->values()->all(),
         ];
     }
 
@@ -1297,11 +1297,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->values()->all(),
         ];
     }
 
@@ -1464,11 +1464,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->values()->all(),
         ];
     }
 
@@ -1643,11 +1643,11 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         return [
             'infraestructura' => $data_plan,
-            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->toArray(),
+            'anos_infraestructura' => collect($anos_infra)->sortBy('key')->values()->all(),
             'preparacion' => $data_plan_prep,
-            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->toArray(),
+            'anos_preparaciones' => collect($anos_prep)->sortBy('key')->values()->all(),
             'produccion' => $data_plan_prod,
-            'anos_produccion' => collect($anos_prod)->sortBy('key')->toArray(),
+            'anos_produccion' => collect($anos_prod)->sortBy('key')->values()->all(),
         ];
     }
 
