@@ -620,11 +620,10 @@ class CronogramaInfraestructuraPeriodoController extends Controller
             $total_desgloce = 0;
         }
 
+        $sort_plan = collect($periodo_infra)->sortBy('key');
         return [
-            'data_1' => $periodo_infra,
-            'data_2' => $periodo_prep,
             'infraestructura' => $data_plan,
-            'periodo_infraestructura' => collect($periodo_infra)->toArray(),
+            'periodo_infraestructura' => $sort_plan->toArray(),
             'preparacion' => $data_plan_prep,
             'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
             'produccion' => $data_plan_prod,
