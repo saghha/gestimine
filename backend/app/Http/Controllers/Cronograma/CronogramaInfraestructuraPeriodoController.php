@@ -621,7 +621,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
         }
 
         return [
-            'infraestructura' => $data_plan_prep,
+            'infraestructura' => $data_plan,
             'periodo_infraestructura' => collect($periodo_prep)->sortBy('key')->toArray(),
             'preparacion' => $data_plan_prep,
             'periodo_preparaciones' => collect($periodo_prep)->sortBy('key')->toArray(),
