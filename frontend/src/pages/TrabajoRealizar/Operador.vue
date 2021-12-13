@@ -96,7 +96,7 @@
                   </b-tabs>
                 </div>
                 <div>
-                  <b-button variant="danger" href="https:www.gestimine.cl/#/admin/alertas" >Notificar Accidente</b-button>
+                  <b-button variant="danger" href="/#/admin/alertas" >Notificar Accidente</b-button>
                   <p></p>
                 </div>
               </div>
