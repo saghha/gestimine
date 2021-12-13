@@ -484,6 +484,7 @@ class CronogramaInfraestructuraPeriodoController extends Controller
 
         $ano = $request->ano;
 
+        //info para construir
         $data_values = collect([]);
         $data_values_prep = collect([]);
         $data_values_prod = collect([]);

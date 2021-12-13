@@ -145,7 +145,7 @@ export default {
       var data = _.find(item.valores, (value, index) => {return value_ano.key == index})
       console.log(data)
       if(!!data) {
-        return (this.formatAllMoney(data.valor_desgloce_periodo)).toFixed(2)
+        return (this.formatAllMoney(data.valor_desgloce_periodo))
       } else {
         return 0
       }
